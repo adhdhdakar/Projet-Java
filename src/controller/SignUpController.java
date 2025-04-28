@@ -1,10 +1,16 @@
-package view;
-import javafx.event.ActionEvent; // À ne pas oublier !
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
+package controller;
+
 import dao.ClientDAO;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 import model.Client;
 
+import java.io.IOException;
 
 public class SignUpController {
 
@@ -20,7 +26,6 @@ public class SignUpController {
     @FXML
     private Button signUpButton;
 
-    // ✅ ➡️ Ici, l'argument ActionEvent résout ton problème !
     @FXML
     private void handleSignUp(ActionEvent event) {
         String prenom = prenomField.getText();
@@ -37,17 +42,28 @@ public class SignUpController {
         boolean success = dao.create(client);
 
         if (success) {
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "Inscription réussie !");
-            clearFields();
+            // ➡️ PAS de pop-up, on redirige directement vers login.fxml
+            redirectToLogin();
         } else {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Email déjà utilisé ?");
         }
     }
 
-    private void clearFields() {
-        prenomField.clear();
-        emailField.clear();
-        mdpField.clear();
+    private void redirectToLogin() {
+        try {
+            // Fermer la fenêtre actuelle (signup)
+            signUpButton.getScene().getWindow().hide();
+
+            // Charger et afficher la fenêtre de connexion
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Page de connexion");
+            stage.setScene(new Scene(root, 600, 400));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
