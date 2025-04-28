@@ -11,6 +11,8 @@ public class MainPageController {
     @FXML private ImageView tshirt2;
     @FXML private ImageView chaussuresImage;
 
+
+
     @FXML
     private void initialize() {
         // Attention : on charge depuis /images/ puisque c'est le dossier OUT
