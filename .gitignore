@@ -32,3 +32,5 @@ bin/
 
 ### BDD ###
 /src/DAO/Connexion.java
+
+.iml
