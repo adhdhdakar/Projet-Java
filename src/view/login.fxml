@@ -19,7 +19,7 @@
                 <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe" prefWidth="300.0" />
 
                 <Button fx:id="loginButton" text="Se connecter" prefWidth="200.0" />
-                <Button fx:id="signupButton" text="S'inscrire" prefWidth="200.0" onAction="#openSignupWindow" />
+                <Button fx:id="signupButton" text="S'inscrire" prefWidth="200.0" />
 
                 <Label fx:id="messageLabel" text="" style="-fx-text-fill: red;" />
 
