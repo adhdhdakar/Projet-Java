@@ -42,7 +42,7 @@ public class SignUpController {
         boolean success = dao.create(client);
 
         if (success) {
-            // ➡️ PAS de pop-up, on redirige directement vers login.fxml
+
             redirectToLogin();
         } else {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Email déjà utilisé ?");
