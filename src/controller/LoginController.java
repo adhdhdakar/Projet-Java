@@ -1,6 +1,7 @@
 package controller;
 
 import dao.ClientDAO;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,34 +30,47 @@ public class LoginController {
     private Label messageLabel;
 
     @FXML
-    private void initialize() {
-        loginButton.setOnAction(event -> handleLogin());
+    public void initialize() {
+        loginButton.setOnAction(this::handleLogin);
+        signupButton.setOnAction(this::handleSignup);
     }
 
-    private void handleLogin() {
+    private void handleLogin(ActionEvent event) {
         String email = emailField.getText();
         String password = passwordField.getText();
 
-        ClientDAO clientDAO = new ClientDAO();
-        Client client = clientDAO.findByEmailAndPassword(email, password);
+        ClientDAO dao = new ClientDAO();
+        Client client = dao.findByEmailAndPassword(email, password);
 
         if (client != null) {
-            messageLabel.setStyle("-fx-text-fill: green;");
-            messageLabel.setText("Bienvenue " + client.getPrenom() + "!");
             System.out.println("Bienvenue " + client.getPrenom() + " " + client.getNom());
+
+            // Fermer la fenêtre de login
+            loginButton.getScene().getWindow().hide();
+
+            // Charger et ouvrir MainPage.fxml
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainPage.fxml"));
+                Parent root = loader.load();
+                Stage stage = new Stage();
+                stage.setTitle("Accueil");
+                stage.setScene(new Scene(root, 600, 400));
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         } else {
-            messageLabel.setStyle("-fx-text-fill: red;");
             messageLabel.setText("Erreur d'identifiants !");
         }
     }
 
-    @FXML
-    private void openSignupWindow() {
-        try {
-            // Fermer la fenêtre de connexion
-            signupButton.getScene().getWindow().hide();
+    private void handleSignup(ActionEvent event) {
+        // Fermer la fenêtre actuelle
+        signupButton.getScene().getWindow().hide();
 
-            // Charger la page d'inscription
+        // Ouvrir Signup.fxml
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/signup.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
