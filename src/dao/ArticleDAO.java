@@ -35,4 +35,14 @@ public class ArticleDAO {
 
         return articles;
     }
+
+    public void updateStock(int idArticle, int nouveauStock) throws SQLException {
+        String sql = "UPDATE Article SET stock = ? WHERE idArticle = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, nouveauStock);
+            ps.setInt(2, idArticle);
+            ps.executeUpdate();
+        }
+    }
 }
