@@ -6,13 +6,11 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import model.ArticleInCart;
-import model.Session;  // ou model.Session selon où vous l'avez mis
 
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -79,8 +77,11 @@ public class CartController {
         double sum = cardContainer.getChildren().stream()
                 .mapToDouble(node -> {
                     VBox vb = (VBox) node;
-                    Label lbl = (Label) vb.getChildren().get(4); // 5ᵉ élément = lineTotal
-                    String txt = lbl.getText().replace("Total : ", "").replace(" €", "");
+                    Label lbl = (Label) vb.getChildren().get(4);  // lineTotal
+                    String txt = lbl.getText()
+                            .replace("Total : ", "")
+                            .replace(" €", "")
+                            .replace(",", ".");           // <— on remplace la virgule
                     return Double.parseDouble(txt);
                 })
                 .sum();
