@@ -31,6 +31,6 @@ bin/
 .DS_Store
 
 ### BDD ###
-/src/DAO/Connexion.java
+/src/dao/Connexion.java
 
 .iml

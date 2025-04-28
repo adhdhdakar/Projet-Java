@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.CartController"
+            style="-fx-background-color: #f5f5f5;">
+
+    <!-- En-tête -->
+    <top>
+        <Label text="🛒 Mon Panier"
+               BorderPane.alignment="CENTER"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-padding: 20 0 10 0;"/>
+    </top>
+
+    <!-- Cartes dans un FlowPane scrollable -->
+    <center>
+        <ScrollPane fitToWidth="true"
+                    style="-fx-background: transparent;">
+            <content>
+                <FlowPane fx:id="cardContainer"
+                          hgap="20"
+                          vgap="20"
+                          style="-fx-background-color: transparent; -fx-padding: 20;">
+                    <!-- les cartes seront ajoutées dynamiquement en code -->
+                </FlowPane>
+            </content>
+        </ScrollPane>
+    </center>
+
+    <!-- Bas de page : un seul nœud HBox -->
+    <bottom>
+        <HBox spacing="20"
+              alignment="CENTER_RIGHT"
+              BorderPane.alignment="CENTER"
+              style="-fx-padding: 10 20;">
+            <children>
+                <Label fx:id="totalLabel"
+                       text="Total : 0,00 €"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Button text="Valider la commande"
+                        onAction="#handleCheckout"
+                        style="-fx-font-size: 14px; -fx-padding: 8 15;"/>
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>
