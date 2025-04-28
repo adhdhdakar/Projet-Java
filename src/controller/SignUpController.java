@@ -1,4 +1,4 @@
-package view;
+package controller;
 import javafx.event.ActionEvent; // À ne pas oublier !
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -20,7 +20,6 @@ public class SignUpController {
     @FXML
     private Button signUpButton;
 
-    // ✅ ➡️ Ici, l'argument ActionEvent résout ton problème !
     @FXML
     private void handleSignUp(ActionEvent event) {
         String prenom = prenomField.getText();
