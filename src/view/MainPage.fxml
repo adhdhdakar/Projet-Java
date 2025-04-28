@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" prefHeight="600.0" prefWidth="800.0">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainPageController">
 
     <top>
         <MenuBar>
             <menus>
-                <Menu text="Accueil">
-                </Menu>
-                <Menu text="Mon Panier">
-                </Menu>
-                <Menu text="Mon Compte">
-                </Menu>
+                <Menu text="Accueil" fx:id="accueilMenu" />
+                <Menu text="Mon Panier" fx:id="panierMenu" />
+                <Menu text="Mon Compte" fx:id="compteMenu" />
             </menus>
         </MenuBar>
     </top>
 
     <center>
-        <AnchorPane fx:id="contentPane" />
+        <AnchorPane fx:id="contentArea" />
     </center>
 
 </BorderPane>
