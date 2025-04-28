@@ -64,4 +64,24 @@ public class ClientDAO {
 
         return null;
     }
+    public boolean create(Client client) {
+        String sql = "INSERT INTO Client (nom, prenom, email, motDePasse, typeClient) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, client.getNom());
+            stmt.setString(2, client.getPrenom());
+            stmt.setString(3, client.getEmail());
+            stmt.setString(4, client.getMotDePasse());
+            stmt.setString(5, client.getTypeClient());
+
+            stmt.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
