@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import model.ArticleInCart;
+import model.Session;
 
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -24,43 +25,55 @@ public class CartController {
 
     private CartDAO cartDAO = new CartDAO();
 
+
     @FXML
     public void initialize() {
         int idClient = Session.getInstance().getClient().getIdClient();
         List<ArticleInCart> items = cartDAO.findByClient(idClient);
 
         for (ArticleInCart it : items) {
+            System.out.println("DEBUG → article "
+                    + it.getArticle().getNom()
+                    + " quantite=" + it.getQuantite());
             cardContainer.getChildren().add(createCard(it));
         }
         updateTotal();
     }
 
     private Node createCard(ArticleInCart it) {
-        // 1. Charger l'image (idArticle.png) ou default.png si introuvable
+        // 1. Image
         String path = "/images/" + it.getArticle().getIdArticle() + ".png";
         InputStream is = getClass().getResourceAsStream(path);
         Image img = (is != null)
                 ? new Image(is)
                 : new Image(getClass().getResourceAsStream("/images/default.png"));
-
         ImageView iv = new ImageView(img);
         iv.setFitWidth(120);
         iv.setFitHeight(120);
         iv.setPreserveRatio(true);
 
-        // 2. Texte
-        Label name      = new Label(it.getArticle().getNom());
-        Label price     = new Label(String.format("Prix : %.2f €", it.getArticle().getPrixUnitaire()));
-        Label qty       = new Label("Quantité : " + it.getQuantite());
-        Label lineTotal = new Label(String.format("Total : %.2f €", it.getTotal()));
+        // 2. Nom
+        Label lblName = new Label(it.getArticle().getNom());
+        lblName.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
-        name.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-        price.setStyle("-fx-font-size: 12px;");
-        qty.setStyle("-fx-font-size: 12px;");
-        lineTotal.setStyle("-fx-font-size: 12px;");
+        // 3. Prix unitaire
+        Label lblPrice = new Label(
+                String.format("Prix unitaire : %.2f €", it.getArticle().getPrixUnitaire())
+        );
+        lblPrice.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
 
-        // 3. Container carte
-        VBox card = new VBox(iv, name, price, qty, lineTotal);
+        // 4. Quantité
+        Label lblQty = new Label("Quantité : " + it.getQuantite());
+        lblQty.setStyle("-fx-font-size: 12px;");
+
+        // 5. Total ligne
+        Label lblLineTotal = new Label(
+                String.format("Total : %.2f €", it.getTotal())
+        );
+        lblLineTotal.setStyle("-fx-font-size: 12px;");
+
+        // 6. Construire la carte
+        VBox card = new VBox(iv, lblName, lblPrice, lblQty, lblLineTotal);
         card.setSpacing(8);
         card.setPadding(new Insets(10));
         card.setStyle(
@@ -70,6 +83,7 @@ public class CartController {
                         "-fx-background-radius: 5;"
         );
         card.setPrefWidth(160);
+
         return card;
     }
 
