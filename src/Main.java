@@ -7,8 +7,8 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println(">> FXML lookup: " + getClass().getResource("/MainPage.fxml"));
-        Parent root = FXMLLoader.load(getClass().getResource("/MainPage.fxml"));
+        System.out.println(">> FXML lookup: " + getClass().getResource("/view/Login.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.setTitle("Boutique");
         primaryStage.show();
