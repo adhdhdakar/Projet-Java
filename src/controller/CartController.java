@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import model.Session;
 
 public class CartController {
 

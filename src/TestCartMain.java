@@ -4,6 +4,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Client;
+import model.Session;
 
 public class TestCartMain extends Application {
 
