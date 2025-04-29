@@ -3,39 +3,43 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.Menu;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.scene.Parent;
+import javafx.scene.control.MenuItem;
 
 import java.io.IOException;
 
 public class MainPageController {
 
     @FXML
-    private Menu accueilMenu;
+    private MenuItem accueilItem;
 
     @FXML
-    private Menu panierMenu;
+    private MenuItem panierItem;
 
     @FXML
-    private Menu compteMenu;
+    private MenuItem compteItem;
 
     @FXML
     private AnchorPane contentArea;
 
     @FXML
     public void initialize() {
-
-        accueilMenu.setOnMenuValidation(event -> loadView("/view/AccueilView.fxml"));
-
-        panierMenu.setOnMenuValidation(event -> loadView("/view/PanierView.fxml"));
-
-        compteMenu.setOnMenuValidation(event -> loadView("/view/CompteView.fxml"));
-
-        // charger par defaut page accueil
+        // Charger directement la page d'accueil au début
         loadView("/view/AccueilView.fxml");
+    }
+
+    @FXML
+    private void goAccueil() {
+        loadView("/view/AccueilView.fxml");
+    }
+
+    @FXML
+    private void goPanier() {
+        loadView("/view/PanierView.fxml");
+    }
+
+    @FXML
+    private void goCompte() {
+        loadView("/view/CompteView.fxml");
     }
 
     private void loadView(String fxmlPath) {
