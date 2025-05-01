@@ -5,13 +5,19 @@ public class ArticleInCart {
     private int quantite;
 
     public ArticleInCart(Article article, int quantite) {
-        this.article = article;
+        this.article  = article;
         this.quantite = quantite;
     }
 
-    public Article getArticle() { return article; }
-    public int getQuantite() { return quantite; }
+    public Article getArticle() {
+        return article;
+    }
 
+    public int getQuantite() {
+        return quantite;
+    }
+
+    /** Calcule le total prix × quantité */
     public double getTotal() {
         return article.getPrixUnitaire() * quantite;
     }
