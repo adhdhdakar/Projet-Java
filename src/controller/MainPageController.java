@@ -2,50 +2,40 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.MenuItem;
+import javafx.scene.Parent;
+import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
 public class MainPageController {
 
     @FXML
-    private MenuItem accueilItem;
+    private BorderPane mainPane;
 
     @FXML
-    private MenuItem panierItem;
-
-    @FXML
-    private MenuItem compteItem;
-
-    @FXML
-    private AnchorPane contentArea;
-
-    @FXML
-    public void initialize() {
-        // Charger directement la page d'accueil au début
-        loadView("/view/AccueilView.fxml");
+    private void initialize() {
+        showAccueil();
     }
 
     @FXML
-    private void goAccueil() {
-        loadView("/view/AccueilView.fxml");
+    private void showAccueil() {
+        loadPage("AccueilView.fxml");
     }
 
     @FXML
-    private void goPanier() {
-        loadView("/view/PanierView.fxml");
+    private void showCart() {
+        loadPage("CartContent.fxml");
     }
 
     @FXML
-    private void goCompte() {
-        loadView("/view/CompteView.fxml");
+    private void showCompte() {
+        loadPage("CompteView.fxml");
     }
 
-    private void loadView(String fxmlPath) {
+    private void loadPage(String page) {
         try {
-            AnchorPane view = FXMLLoader.load(getClass().getResource(fxmlPath));
-            contentArea.getChildren().setAll(view);
+            Parent view = FXMLLoader.load(getClass().getResource("/view/" + page));
+            mainPane.setCenter(view);
         } catch (IOException e) {
             e.printStackTrace();
         }

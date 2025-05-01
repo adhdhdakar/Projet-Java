@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.CartController"
+      spacing="10" style="-fx-background-color: #f5f5f5; -fx-padding: 20;">
+
+    <Label text="🛒 Mon Panier"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+    <ScrollPane fitToWidth="true"
+                style="-fx-background: transparent;">
+        <content>
+            <FlowPane fx:id="cardContainer"
+                      hgap="20"
+                      vgap="20"
+                      style="-fx-background-color: transparent;">
+            </FlowPane>
+        </content>
+    </ScrollPane>
+
+    <HBox spacing="20"
+          alignment="CENTER_RIGHT"
+          style="-fx-padding: 10 0;">
+        <children>
+            <Label fx:id="totalLabel"
+                   text="Total : 0,00 €"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+            <Button text="Valider la commande"
+                    onAction="#handleCheckout"
+                    style="-fx-font-size: 14px; -fx-padding: 8 15;" />
+        </children>
+    </HBox>
+
+</VBox>

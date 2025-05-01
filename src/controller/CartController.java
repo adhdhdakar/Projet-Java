@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import model.ArticleInCart;
+import model.Session;
 
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -26,6 +27,11 @@ public class CartController {
 
     @FXML
     public void initialize() {
+        if (Session.getInstance().getClient() == null) {
+            System.out.println("Aucun client connecté !");
+            return;
+        }
+
         int idClient = Session.getInstance().getClient().getIdClient();
         List<ArticleInCart> items = cartDAO.findByClient(idClient);
 

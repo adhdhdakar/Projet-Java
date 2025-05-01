@@ -6,24 +6,24 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainPageController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainPageController" fx:id="mainPane">
 
     <top>
         <MenuBar>
             <menus>
                 <Menu text="Accueil">
                     <items>
-                        <MenuItem text="Accueil" fx:id="accueilItem" onAction="#goAccueil" />
+                        <MenuItem text="Accueil" fx:id="accueilItem" onAction="#showAccueil" />
                     </items>
                 </Menu>
                 <Menu text="Mon Panier">
                     <items>
-                        <MenuItem text="Mon Panier" fx:id="panierItem" onAction="#goPanier" />
+                        <MenuItem text="Mon Panier" fx:id="panierItem" onAction="#showCart" />
                     </items>
                 </Menu>
                 <Menu text="Mon Compte">
                     <items>
-                        <MenuItem text="Mon Compte" fx:id="compteItem" onAction="#goCompte" />
+                        <MenuItem text="Mon Compte" fx:id="compteItem" onAction="#showCompte" />
                     </items>
                 </Menu>
             </menus>
