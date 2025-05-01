@@ -9,10 +9,8 @@ import java.util.List;
 
 public class CartDAO {
 
-    /**
-     * Récupère tous les ArticleInCart pour un client donné
-     * en joignant Commande ⇢ LigneCommande ⇢ Article.
-     */
+    // Récupère tous les ArticleInCart pour un client donné en joignant Commande ⇢ LigneCommande ⇢ Article.
+
     public List<ArticleInCart> findByClient(int idClient) {
         List<ArticleInCart> items = new ArrayList<>();
         String sql =
@@ -22,7 +20,7 @@ public class CartDAO {
                         "FROM Commande c " +
                         "  JOIN LigneCommande lc ON c.idCommande = lc.idCommande " +
                         "  JOIN Article a      ON a.idArticle  = lc.idArticle " +
-                        "WHERE c.idClient = ?";
+                        "WHERE c.idClient = ? AND c.statut = 'PANIER'\n";
 
         try (Connection conn = Connexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -48,12 +46,7 @@ public class CartDAO {
         return items;
     }
 
-    /**
-     * Vide le "panier" du client en supprimant
-     * toutes les lignes de commande associées.
-     * Attention : ceci supprime toutes les commandes passées !
-     * Si vous voulez distinguer panier / historiques, il faut un flag.
-     */
+
     public void clearCart(int idClient) throws SQLException {
         String sql =
                 "DELETE lc " +
