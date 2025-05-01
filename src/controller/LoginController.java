@@ -45,6 +45,9 @@ public class LoginController {
         if (client != null) {
             System.out.println("Bienvenue " + client.getPrenom() + " " + client.getNom());
 
+            // 🔥 SAUVEGARDER LE CLIENT DANS LA SESSION ICI !
+            model.Session.getInstance().setClient(client);
+
             // Fermer la fenêtre de login
             loginButton.getScene().getWindow().hide();
 

@@ -14,16 +14,23 @@ import java.io.IOException;
 
 public class SignUpController {
 
-    @FXML private TextField prenomField;
-    @FXML private TextField emailField;
-    @FXML private PasswordField mdpField;
-    @FXML private Button signUpButton;
+    @FXML
+    private TextField prenomField;
+
+    @FXML
+    private TextField emailField;
+
+    @FXML
+    private PasswordField mdpField;
+
+    @FXML
+    private Button signUpButton;
 
     @FXML
     private void handleSignUp(ActionEvent event) {
         String prenom = prenomField.getText();
-        String email  = emailField.getText();
-        String mdp    = mdpField.getText();
+        String email = emailField.getText();
+        String mdp = mdpField.getText();
 
         if (prenom.isEmpty() || email.isEmpty() || mdp.isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Veuillez remplir tous les champs.");
@@ -31,31 +38,31 @@ public class SignUpController {
         }
 
         Client client = new Client(0, prenom, "", email, mdp, "nouveau");
-        boolean success = new ClientDAO().create(client);
+        ClientDAO dao = new ClientDAO();
+        boolean success = dao.create(client);
 
-        if (!success) {
+        if (success) {
+
+            redirectToLogin();
+        } else {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Email déjà utilisé ?");
-            return;
         }
+    }
 
-        // Inscription OK → on bascule sur la MainPage
+    private void redirectToLogin() {
         try {
-            // 1) Récupère la fenêtre actuelle
-            Stage stage = (Stage) signUpButton.getScene().getWindow();
+            // Fermer la fenêtre actuelle (signup)
+            signUpButton.getScene().getWindow().hide();
 
-            // 2) Charge le FXML de la page principale
-            Parent mainRoot = FXMLLoader.load(
-                    getClass().getResource("/view/MainPage.fxml")
-            );
-
-            // 3) Remplace la scène
-            stage.setScene(new Scene(mainRoot, 800, 600));
-            stage.setTitle("Accueil - Boutique");
+            // Charger et afficher la fenêtre de connexion
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Page de connexion");
+            stage.setScene(new Scene(root, 600, 400));
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR,
-                    "Erreur interne",
-                    "Impossible de charger la page principale.");
         }
     }
 

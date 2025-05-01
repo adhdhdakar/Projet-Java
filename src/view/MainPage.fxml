@@ -1,73 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="726.0" prefWidth="984.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainPageController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainPageController" fx:id="mainPane">
 
     <top>
         <MenuBar>
-            <Menu text="Menu">
-                <MenuItem text="Accueil" />
-                <MenuItem text="Mon Panier" />
-                <MenuItem text="Mon Compte" />
-            </Menu>
-         <Menu mnemonicParsing="false" text="Contact">
-           <items>
-             <MenuItem mnemonicParsing="false" text="Action 1" />
-           </items>
-         </Menu>
-         <Menu mnemonicParsing="false" text="About Us ">
-           <items>
-             <MenuItem mnemonicParsing="false" text="Action 1" />
-           </items>
-         </Menu>
+            <menus>
+                <Menu text="Accueil">
+                    <items>
+                        <MenuItem text="Accueil" fx:id="accueilItem" onAction="#showAccueil" />
+                    </items>
+                </Menu>
+                <Menu text="Mon Panier">
+                    <items>
+                        <MenuItem text="Mon Panier" fx:id="panierItem" onAction="#showCart" />
+                    </items>
+                </Menu>
+                <Menu text="Mon Compte">
+                    <items>
+                        <MenuItem text="Mon Compte" fx:id="compteItem" onAction="#showCompte" />
+                    </items>
+                </Menu>
+            </menus>
         </MenuBar>
     </top>
-   <center>
-        <VBox alignment="CENTER" prefHeight="701.0" prefWidth="972.0" spacing="20" BorderPane.alignment="CENTER">
-            <Text text="Bienvenue dans notre boutique de vêtements !" wrappingWidth="471.90460205078125">
-                <font>
-                    <Font size="24" />
-                </font>
-            <VBox.margin>
-               <Insets bottom="100.0" right="300.0" top="-200.0" />
-            </VBox.margin>
-            </Text>
 
-            <HBox alignment="CENTER" prefHeight="17.0" prefWidth="510.0" spacing="30">
-                <VBox alignment="CENTER">
-                    <ImageView fx:id="tshirt1" fitHeight="150" fitWidth="150" />
-                    <Label text="T-Shirt Gris" />
-                    <Label text="15 €" />
-                    <Button onAction="#ajouterTshirt" text="Ajouter au panier" />
-                </VBox>
-
-                <VBox alignment="CENTER">
-                    <ImageView fx:id="tshirt2" fitHeight="150" fitWidth="150" />
-                    <Label text="Pantalon stylé" />
-                    <Label text="30 €" />
-                    <Button onAction="#ajouterPantalon" text="Ajouter au panier" />
-                </VBox>
-
-                <VBox alignment="CENTER">
-                    <ImageView fx:id="chaussuresImage" fitHeight="150" fitWidth="150" />
-                    <Label text="Chaussures tendances" />
-                    <Label text="50 €" />
-                    <Button onAction="#ajouterChaussures" text="Ajouter au panier" />
-                </VBox>
-            </HBox>
-        </VBox>
-   </center>
+    <center>
+        <AnchorPane fx:id="contentArea" />
+    </center>
 
 </BorderPane>

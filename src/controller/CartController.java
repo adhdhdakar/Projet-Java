@@ -37,6 +37,11 @@ public class CartController {
 
     @FXML
     public void initialize() {
+        if (Session.getInstance().getClient() == null) {
+            System.out.println("Aucun client connecté !");
+            return;
+        }
+
         int idClient = Session.getInstance().getClient().getIdClient();
         items = cartDAO.findByClient(idClient);
         for (ArticleInCart it : items) {
