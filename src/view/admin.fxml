@@ -12,18 +12,18 @@
    <children>
       <BorderPane prefHeight="550.0" prefWidth="632.0">
          <left>
-            <VBox prefHeight="450.0" prefWidth="94.0" BorderPane.alignment="CENTER">
+            <VBox prefHeight="241.0" prefWidth="92.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="btnInventaire" mnemonicParsing="false" onAction="#handleInventaire" prefHeight="61.0" prefWidth="99.0" text="Inventaire" />
-                  <Button fx:id="btnOffres" mnemonicParsing="false" onAction="#handleOffres" prefHeight="64.0" prefWidth="99.0" text="Offres" />
-                  <Button fx:id="btnClients" mnemonicParsing="false" onAction="#handleClients" prefHeight="70.0" prefWidth="104.0" text="Clients" />
-                  <Button fx:id="btnStats" mnemonicParsing="false" onAction="#handleStats" prefHeight="77.0" prefWidth="104.0" text="Statistiques" />
-                  <Button mnemonicParsing="false" prefHeight="79.0" prefWidth="101.0" text="Déconnexion" />
+                  <Button fx:id="btnInventaire" mnemonicParsing="false" onAction="#handleInventaire" prefHeight="33.0" prefWidth="94.0" text="Inventaire" />
+                  <Button fx:id="btnOffres" mnemonicParsing="false" onAction="#handleOffres" prefHeight="32.0" prefWidth="93.0" text="Offres" />
+                  <Button fx:id="btnClients" mnemonicParsing="false" onAction="#handleClients" prefHeight="33.0" prefWidth="94.0" text="Clients" />
+                  <Button fx:id="btnStats" mnemonicParsing="false" onAction="#handleStats" prefHeight="33.0" prefWidth="92.0" text="Statistiques" />
+                  <Button mnemonicParsing="false" prefHeight="33.0" prefWidth="92.0" text="Déconnexion" />
                </children>
             </VBox>
          </left>
          <top>
-            <Label text="Panneau d'administration" BorderPane.alignment="CENTER">
+            <Label prefHeight="32.0" prefWidth="263.0" text="Panneau d'administration" BorderPane.alignment="CENTER">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>

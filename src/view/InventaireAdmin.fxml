@@ -8,24 +8,24 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="393.0" prefWidth="562.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminController">
-    <VBox alignment="TOP_CENTER" spacing="10.0" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
+<AnchorPane prefHeight="393.0" prefWidth="562.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InventaireAdminController">
+    <VBox alignment="TOP_CENTER" prefHeight="513.0" prefWidth="553.0" spacing="10.0" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="10">
 
         <!-- Barre de recherche -->
         <TextField fx:id="searchField" promptText="Rechercher un achat par nom d'article ou client..." />
 
         <!-- Tableau des achats clients -->
-        <TableView fx:id="tableAchats" prefHeight="273.0" prefWidth="588.0">
+        <TableView fx:id="tableAchats" prefHeight="423.0" prefWidth="564.0">
             <columns>
-                <TableColumn prefWidth="106.0" text="Nom de l'article" />
-                <TableColumn prefWidth="113.0" text="Nom du client" />
-                <TableColumn prefWidth="75.0" text="Quantité" />
-                <TableColumn prefWidth="144.0" text="Date d'achat" />
-                <TableColumn prefWidth="83.0" text="Statut" />
+                <TableColumn fx:id="colArticle" prefWidth="141.0" text="Nom de l'article" />
+                <TableColumn fx:id="colClient" prefWidth="105.0" text="Nom du client" />
+                <TableColumn fx:id="colQuantite" prefWidth="69.0" text="Quantité" />
+                <TableColumn fx:id="colDate" prefWidth="121.0" text="Date d'achat" />
+                <TableColumn fx:id="colNum" prefWidth="88.0" text="N° Commande" />
             </columns>
         </TableView>
 
-        <HBox alignment="CENTER" prefHeight="54.0" prefWidth="485.0" spacing="10.0">
+        <HBox alignment="CENTER" prefHeight="38.0" prefWidth="552.0" spacing="10.0">
             <Button fx:id="btnAjouter" text="Ajouter" />
             <Button fx:id="btnModifier" text="Modifier" />
             <Button fx:id="btnSupprimer" text="Supprimer" />
