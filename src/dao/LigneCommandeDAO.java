@@ -4,15 +4,39 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import model.LigneCommande;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LigneCommandeDAO {
 
     /**
-     * Insère une ligne de commande pour un article donné.
-     * @param idCommande l'ID de la commande parente
-     * @param idArticle  l'ID de l'article
-     * @param quantite   la quantité commandée
-     * @throws SQLException
+     * Récupère toutes les lignes de la commande donnée.
+     */
+    public List<LigneCommande> findByCommande(int idCommande) throws SQLException {
+        String sql = "SELECT idLigne, idCommande, idArticle, quantite "
+                + "FROM LigneCommande WHERE idCommande = ?";
+        List<LigneCommande> list = new ArrayList<>();
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idCommande);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new LigneCommande(
+                            rs.getInt("idLigne"),
+                            rs.getInt("idCommande"),
+                            rs.getInt("idArticle"),
+                            rs.getInt("quantite")
+                    ));
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Insère une ligne de commande.
      */
     public void create(int idCommande, int idArticle, int quantite) throws SQLException {
         String sql = "INSERT INTO LigneCommande (idCommande, idArticle, quantite) VALUES (?, ?, ?)";

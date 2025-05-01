@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.*;
 import java.time.LocalDate;
+import model.Commande;
 
 public class CommandeDAO {
 
@@ -68,6 +69,39 @@ public class CommandeDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, idCommande);
+            ps.executeUpdate();
+        }
+    }
+
+    // import model.Commande; // ta classe métier Commande doit inclure un champ String statut
+
+    public Commande findByClientAndStatus(int idClient, String statut) throws SQLException {
+        String sql = "SELECT idCommande, dateCommande, idClient, statut "
+                + "FROM Commande WHERE idClient = ? AND statut = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idClient);
+            ps.setString(2, statut);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Commande(
+                            rs.getInt("idCommande"),
+                            rs.getDate("dateCommande").toLocalDate(),
+                            rs.getInt("idClient"),
+                            rs.getString("statut")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
+    public void updateStatut(int idCommande, String nouveauStatut) throws SQLException {
+        String sql = "UPDATE Commande SET statut = ? WHERE idCommande = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nouveauStatut);
+            ps.setInt(2, idCommande);
             ps.executeUpdate();
         }
     }
