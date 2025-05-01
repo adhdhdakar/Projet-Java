@@ -13,7 +13,7 @@
             style="-fx-background-color: #f5f5f5;">
 
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 20 0 10 0;">
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 20 0 10 20;">
             <children>
                 <Button text="← Retour"
                         onAction="#handleReturn"
@@ -25,16 +25,19 @@
     </top>
 
     <center>
-        <FlowPane fx:id="cardContainer"
-                  hgap="20"
-                  vgap="20"
-                  style="-fx-background-color: transparent; -fx-padding: 20;" />
+        <!-- On met le FlowPane DANS un ScrollPane pour être sûr qu'on voit les cartes -->
+        <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-padding: 0 20 0 20;">
+            <content>
+                <FlowPane fx:id="cardContainer"
+                          hgap="20" vgap="20"
+                          style="-fx-background-color: transparent; -fx-padding: 20;"/>
+            </content>
+        </ScrollPane>
     </center>
 
     <bottom>
         <HBox spacing="20"
               alignment="CENTER_RIGHT"
-              BorderPane.alignment="CENTER"
               style="-fx-padding: 10 20;">
             <children>
                 <Label fx:id="totalLabel"

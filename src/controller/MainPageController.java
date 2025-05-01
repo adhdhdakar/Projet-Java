@@ -24,7 +24,7 @@ public class MainPageController {
 
     @FXML
     private void showCart() {
-        loadPage("CartContent.fxml");
+        loadPage("Cart.fxml");
     }
 
     @FXML
