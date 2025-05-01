@@ -74,7 +74,7 @@ public class LoginController {
 
         // Ouvrir Signup.fxml
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/signup.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignUp.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setTitle("Inscription");

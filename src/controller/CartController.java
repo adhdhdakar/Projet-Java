@@ -1,18 +1,27 @@
 package controller;
 
 import dao.CartDAO;
+import dao.CommandeDAO;
+import dao.ArticleDAO;
+import dao.LigneCommandeDAO;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.ArticleInCart;
 import model.Session;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -24,6 +33,7 @@ public class CartController {
     @FXML private Label totalLabel;
 
     private CartDAO cartDAO = new CartDAO();
+    private List<ArticleInCart> items;
 
     @FXML
     public void initialize() {
@@ -33,8 +43,7 @@ public class CartController {
         }
 
         int idClient = Session.getInstance().getClient().getIdClient();
-        List<ArticleInCart> items = cartDAO.findByClient(idClient);
-
+        items = cartDAO.findByClient(idClient);
         for (ArticleInCart it : items) {
             cardContainer.getChildren().add(createCard(it));
         }
@@ -42,31 +51,32 @@ public class CartController {
     }
 
     private Node createCard(ArticleInCart it) {
-        // 1. Charger l'image (idArticle.png) ou default.png si introuvable
         String path = "/images/" + it.getArticle().getIdArticle() + ".png";
         InputStream is = getClass().getResourceAsStream(path);
         Image img = (is != null)
                 ? new Image(is)
                 : new Image(getClass().getResourceAsStream("/images/default.png"));
-
         ImageView iv = new ImageView(img);
         iv.setFitWidth(120);
-        iv.setFitHeight(120);
         iv.setPreserveRatio(true);
 
-        // 2. Texte
-        Label name      = new Label(it.getArticle().getNom());
-        Label price     = new Label(String.format("Prix : %.2f €", it.getArticle().getPrixUnitaire()));
-        Label qty       = new Label("Quantité : " + it.getQuantite());
-        Label lineTotal = new Label(String.format("Total : %.2f €", it.getTotal()));
+        Label lblName  = new Label(it.getArticle().getNom());
+        lblName.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
-        name.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-        price.setStyle("-fx-font-size: 12px;");
-        qty.setStyle("-fx-font-size: 12px;");
-        lineTotal.setStyle("-fx-font-size: 12px;");
+        Label lblPrice = new Label(
+                String.format("Prix unitaire : %.2f €", it.getArticle().getPrixUnitaire())
+        );
+        lblPrice.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
 
-        // 3. Container carte
-        VBox card = new VBox(iv, name, price, qty, lineTotal);
+        Label lblQty   = new Label("Quantité : " + it.getQuantite());
+        lblQty.setStyle("-fx-font-size: 12px;");
+
+        Label lblTotal = new Label(
+                String.format("Total : %.2f €", it.getTotal())
+        );
+        lblTotal.setStyle("-fx-font-size: 12px;");
+
+        VBox card = new VBox(iv, lblName, lblPrice, lblQty, lblTotal);
         card.setSpacing(8);
         card.setPadding(new Insets(10));
         card.setStyle(
@@ -80,16 +90,8 @@ public class CartController {
     }
 
     private void updateTotal() {
-        double sum = cardContainer.getChildren().stream()
-                .mapToDouble(node -> {
-                    VBox vb = (VBox) node;
-                    Label lbl = (Label) vb.getChildren().get(4);  // lineTotal
-                    String txt = lbl.getText()
-                            .replace("Total : ", "")
-                            .replace(" €", "")
-                            .replace(",", ".");           // <— on remplace la virgule
-                    return Double.parseDouble(txt);
-                })
+        double sum = items.stream()
+                .mapToDouble(ArticleInCart::getTotal)
                 .sum();
         totalLabel.setText(String.format("Total : %.2f €", sum));
     }
@@ -98,34 +100,39 @@ public class CartController {
     private void handleCheckout() {
         try {
             int idClient = Session.getInstance().getClient().getIdClient();
-
-            // Création de la commande
-            dao.CommandeDAO cmdDAO = new dao.CommandeDAO();
+            CommandeDAO cmdDAO = new CommandeDAO();
             int idCommande = cmdDAO.create(LocalDate.now(), idClient);
 
-            // Insertion des lignes et mise à jour du stock
-            dao.ArticleDAO artDAO = new dao.ArticleDAO();
-            dao.LigneCommandeDAO lcDAO = new dao.LigneCommandeDAO();
-            for (Node node : cardContainer.getChildren()) {
-                VBox vb = (VBox) node;
-                // On avait stocké la commande dans l'ordre initial :
-                // ici on reboucle via cartDAO.findByClient
-                // Pour simplifier, on peut stocker la liste en champ si besoin
+            LigneCommandeDAO ligneDAO = new LigneCommandeDAO();
+            ArticleDAO artDAO = new ArticleDAO();
+            for (ArticleInCart item : items) {
+                int idArticle = item.getArticle().getIdArticle();
+                int quantite  = item.getQuantite();
+                ligneDAO.create(idCommande, idArticle, quantite);
+                int newStock = item.getArticle().getStock() - quantite;
+                artDAO.updateStock(idArticle, newStock);
             }
-            // (Vous pouvez réutiliser la liste 'items' du initialize pour créer les lignes)
 
-            // Nettoyage UI
+            items.clear();
             cardContainer.getChildren().clear();
             updateTotal();
 
-            Alert a = new Alert(Alert.AlertType.INFORMATION,
-                    "Votre commande n°" + idCommande + " a bien été prise en compte !");
-            a.showAndWait();
+            new Alert(Alert.AlertType.INFORMATION,
+                    "✅ Votre commande n°" + idCommande + " a bien été prise en compte !")
+                    .showAndWait();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
             new Alert(Alert.AlertType.ERROR,
-                    "Erreur lors de la validation de la commande").showAndWait();
+                    "❌ Erreur lors de la validation de la commande").showAndWait();
         }
+    }
+
+    @FXML
+    private void handleReturn(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/view/MainPage.fxml"));
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root, 600, 400));
+        stage.setTitle("Page Principale");
     }
 }
