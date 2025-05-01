@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="393.0" prefWidth="562.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminController">
+    <VBox alignment="TOP_CENTER" spacing="10.0" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
+
+        <!-- Barre de recherche -->
+        <TextField fx:id="searchField" promptText="Rechercher un achat par nom d'article ou client..." />
+
+        <!-- Tableau des achats clients -->
+        <TableView fx:id="tableAchats" prefHeight="273.0" prefWidth="588.0">
+            <columns>
+                <TableColumn prefWidth="106.0" text="Nom de l'article" />
+                <TableColumn prefWidth="113.0" text="Nom du client" />
+                <TableColumn prefWidth="75.0" text="Quantité" />
+                <TableColumn prefWidth="144.0" text="Date d'achat" />
+                <TableColumn prefWidth="83.0" text="Statut" />
+            </columns>
+        </TableView>
+
+        <HBox alignment="CENTER" prefHeight="54.0" prefWidth="485.0" spacing="10.0">
+            <Button fx:id="btnAjouter" text="Ajouter" />
+            <Button fx:id="btnModifier" text="Modifier" />
+            <Button fx:id="btnSupprimer" text="Supprimer" />
+        </HBox>
+
+    </VBox>
+</AnchorPane>
