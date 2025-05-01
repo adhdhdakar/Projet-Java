@@ -45,7 +45,7 @@ public class SignUpController {
 
             // 2) Charge le FXML de la page principale
             Parent mainRoot = FXMLLoader.load(
-                    getClass().getResource("/MainPage.fxml")
+                    getClass().getResource("/view/MainPage.fxml")
             );
 
             // 3) Remplace la scène

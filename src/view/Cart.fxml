@@ -13,9 +13,15 @@
             style="-fx-background-color: #f5f5f5;">
 
     <top>
-        <Label text="🛒 Mon Panier"
-               BorderPane.alignment="CENTER"
-               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-padding: 20 0 10 0;"/>
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 20 0 10 0;">
+            <children>
+                <Button text="← Retour"
+                        onAction="#handleReturn"
+                        style="-fx-font-size: 14px;"/>
+                <Label text="🛒 Mon Panier"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+            </children>
+        </HBox>
     </top>
 
     <center>
