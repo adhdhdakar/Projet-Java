@@ -35,6 +35,12 @@ public class InventaireAdminController {
     private FilteredList<Achat> filteredData;
 
     @FXML
+    private Button btnModifier;
+
+    @FXML
+    private Button btnSupprimer;
+
+    @FXML
     public void initialize() {
         colArticle.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getNomArticle()));
         colClient.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getNomClient()));
@@ -66,4 +72,43 @@ public class InventaireAdminController {
     }
 
     // + ajouter bouton ajouter supprimer et modifier
+    @FXML
+    private void handleSupprimer() {
+        Achat selected = tableAchats.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Aucun achat sélectionné", "Veuillez sélectionner un achat à supprimer.");
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText("Supprimer l'achat " + "'" + selected.getNomArticle() + "' (x" + selected.getQuantite() + ") de " + selected.getNomClient() + " ?");
+        alert.setContentText("Cette action est irréversible.");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                AchatDAO dao = new AchatDAO();
+                boolean success = dao.delete(selected.getNumCommande(), selected.getIdArticle()); //Suppression dans la base
+
+                if (success) {
+                    filteredData.getSource().remove(selected); // on supprime localement
+                } else {
+                    showAlert("Erreur", "La suppression a échoué.");
+                }
+            }
+        });
+    }
+
+    @FXML
+    private void handleModifier() {
+
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 }
