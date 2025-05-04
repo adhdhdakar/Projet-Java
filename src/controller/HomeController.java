@@ -57,7 +57,13 @@ public class HomeController {
                 return;
             }
 
-            int idCommande = articleDAO.getOrCreatePanierCommande(Session.getInstance().getClient().getIdClient());
+            int idCommande = 0;
+            try {
+                idCommande = articleDAO.getOrCreatePanierCommande(Session.getInstance().getClient().getIdClient());
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
             try {
                 ligneDAO.createOrIncrement(idCommande, article.getIdArticle(), 1);
             } catch (SQLException ex) {

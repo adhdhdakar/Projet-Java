@@ -1,7 +1,8 @@
 package controller;
 
-import dao.CommandeDAO;
 import dao.ArticleDAO;
+import dao.CartDAO;
+import dao.CommandeDAO;
 import dao.LigneCommandeDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,15 +19,12 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.ArticleInCart;
-import model.Commande;
-import model.LigneCommande;
 import model.Session;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CartController {
@@ -34,53 +32,30 @@ public class CartController {
     @FXML private FlowPane cardContainer;
     @FXML private Label totalLabel;
 
-    private CommandeDAO cmdDAO        = new CommandeDAO();
-    private LigneCommandeDAO ligneDAO = new LigneCommandeDAO();
-    private ArticleDAO artDAO         = new ArticleDAO();
-
-    private List<ArticleInCart> items = new ArrayList<>();
-    private Commande cmdEnCours;
+    private final CartDAO cartDAO = new CartDAO();
 
     @FXML
     public void initialize() {
-        // Vérif client
-        if (Session.getInstance().getClient() == null) {
-            System.out.println("Aucun client connecté !");
-            return;
-        }
-        int idClient = Session.getInstance().getClient().getIdClient();
-
-        try {
-            // 1) Récupère ou crée la commande EC
-            cmdEnCours = cmdDAO.findByClientAndStatus(idClient, "EC");
-            if (cmdEnCours == null) {
-                int newId = cmdDAO.create(LocalDate.now(), idClient);
-                cmdEnCours = new Commande(newId, LocalDate.now(), idClient, "EC");
-            }
-
-            // 2) Charge les lignes et transforme en ArticleInCart
-            List<LigneCommande> lignes = ligneDAO.findByCommande(cmdEnCours.getIdCommande());
-            System.out.println("Nombre de lignes en base pour la commande : " + lignes.size());
-            for (LigneCommande l : lignes) {
-                var art = artDAO.findById(l.getIdArticle());
-                items.add(new ArticleInCart(art, l.getQuantite()));
-            }
-
-            // 3) Affiche les cartes
-            for (ArticleInCart it : items) {
-                cardContainer.getChildren().add(createCard(it));
-            }
-            System.out.println("Nombre de cartes ajoutées : " + cardContainer.getChildren().size());
-            updateTotal();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        refreshPanier();
     }
 
-    private Node createCard(ArticleInCart it) {
-        // Image
-        String path = "/images/" + it.getArticle().getIdArticle() + ".png";
+    private void refreshPanier() {
+        cardContainer.getChildren().clear();
+        double total = 0;
+
+        int idClient = Session.getInstance().getClient().getIdClient();
+        List<ArticleInCart> items = cartDAO.findPanierByClient(idClient);
+
+        for (ArticleInCart item : items) {
+            cardContainer.getChildren().add(createCard(item));
+            total += item.getTotal();
+        }
+
+        totalLabel.setText(String.format("Total : %.2f €", total));
+    }
+
+    private VBox createCard(ArticleInCart item) {
+        String path = "/images/" + item.getArticle().getIdArticle() + ".png";
         InputStream is = getClass().getResourceAsStream(path);
         Image img = (is != null)
                 ? new Image(is)
@@ -89,56 +64,50 @@ public class CartController {
         iv.setFitWidth(120);
         iv.setPreserveRatio(true);
 
-        // Labels
-        Label lblName  = new Label(it.getArticle().getNom());
-        lblName.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-        Label lblPrice = new Label(String.format("Prix unitaire : %.2f €", it.getArticle().getPrixUnitaire()));
-        lblPrice.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
-        Label lblQty   = new Label("Quantité : " + it.getQuantite());
-        lblQty.setStyle("-fx-font-size: 12px;");
-        Label lblTotal = new Label(String.format("Total : %.2f €", it.getTotal()));
-        lblTotal.setStyle("-fx-font-size: 12px;");
+        Label name = new Label(item.getArticle().getNom());
+        Label price = new Label(String.format("Prix : %.2f €", item.getArticle().getPrixUnitaire()));
+        Label qty = new Label("Quantité : " + item.getQuantite());
+        Label lineTotal = new Label(String.format("Total : %.2f €", item.getTotal()));
 
-        // Container
-        VBox card = new VBox(iv, lblName, lblPrice, lblQty, lblTotal);
+        name.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+        price.setStyle("-fx-font-size: 12px;");
+        qty.setStyle("-fx-font-size: 12px;");
+        lineTotal.setStyle("-fx-font-size: 12px;");
+
+        VBox card = new VBox(iv, name, price, qty, lineTotal);
         card.setSpacing(8);
         card.setPadding(new Insets(10));
-        card.setStyle(
-                "-fx-background-color: white; " +
-                        "-fx-border-color: #ddd; " +
-                        "-fx-border-radius: 5; " +
-                        "-fx-background-radius: 5;"
-        );
+        card.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5; -fx-background-radius: 5;");
         card.setPrefWidth(160);
         return card;
     }
 
-    private void updateTotal() {
-        double sum = items.stream().mapToDouble(ArticleInCart::getTotal).sum();
-        totalLabel.setText(String.format("Total : %.2f €", sum));
-    }
-
     @FXML
     private void handleCheckout() {
-        if (cmdEnCours == null) {
-            new Alert(Alert.AlertType.WARNING, "Aucune commande en cours à valider.").showAndWait();
-            return;
-        }
         try {
-            // Passe EC → VA
-            cmdDAO.updateStatut(cmdEnCours.getIdCommande(), "VA");
-            new Alert(Alert.AlertType.INFORMATION,
-                    "✅ Votre commande n°" + cmdEnCours.getIdCommande() + " a été validée !")
-                    .showAndWait();
+            int idClient = Session.getInstance().getClient().getIdClient();
+            int idCommande = new ArticleDAO().getOrCreatePanierCommande(idClient);
 
-            // Reset vue
-            items.clear();
-            cardContainer.getChildren().clear();
-            updateTotal();
-            cmdEnCours = null;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "❌ Erreur lors de la validation de la commande.").showAndWait();
+            List<ArticleInCart> items = cartDAO.findPanierByClient(idClient);
+
+            LigneCommandeDAO ligneDAO = new LigneCommandeDAO();
+            ArticleDAO artDAO = new ArticleDAO();
+            for (ArticleInCart item : items) {
+                int idArticle = item.getArticle().getIdArticle();
+                int quantite = item.getQuantite();
+                ligneDAO.create(idCommande, idArticle, quantite);
+                int newStock = item.getArticle().getStock() - quantite;
+                artDAO.updateStock(idArticle, newStock);
+            }
+
+            new CommandeDAO().validerCommande(idCommande);
+
+            refreshPanier(); // on recharge depuis la BDD
+
+            new Alert(Alert.AlertType.INFORMATION, "Commande validée !").showAndWait();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Erreur lors de la validation").showAndWait();
         }
     }
 

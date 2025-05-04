@@ -50,35 +50,48 @@ public class LigneCommandeDAO {
         }
     }
 
-    public void createOrIncrement(int idCommande, int idArticle, int quantite) throws SQLException {
+    public void createOrIncrement(int idCommande, int idArticle, int quantiteAjout) throws SQLException {
         String selectSql = "SELECT quantite FROM LigneCommande WHERE idCommande = ? AND idArticle = ?";
-        String updateSql = "UPDATE LigneCommande SET quantite = quantite + ? WHERE idCommande = ? AND idArticle = ?";
+        String updateSql = "UPDATE LigneCommande SET quantite = ? WHERE idCommande = ? AND idArticle = ?";
         String insertSql = "INSERT INTO LigneCommande (idCommande, idArticle, quantite) VALUES (?, ?, ?)";
 
         try (Connection conn = Connexion.getConnection();
-             PreparedStatement selectStmt = conn.prepareStatement(selectSql)) {
+             PreparedStatement psSelect = conn.prepareStatement(selectSql)) {
 
-            selectStmt.setInt(1, idCommande);
-            selectStmt.setInt(2, idArticle);
-            ResultSet rs = selectStmt.executeQuery();
+            psSelect.setInt(1, idCommande);
+            psSelect.setInt(2, idArticle);
+            ResultSet rs = psSelect.executeQuery();
 
             if (rs.next()) {
-                try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
-                    updateStmt.setInt(1, quantite);
-                    updateStmt.setInt(2, idCommande);
-                    updateStmt.setInt(3, idArticle);
-                    updateStmt.executeUpdate();
+                int currentQty = rs.getInt("quantite");
+                int newQty = currentQty + quantiteAjout;
+
+                try (PreparedStatement psUpdate = conn.prepareStatement(updateSql)) {
+                    psUpdate.setInt(1, newQty);
+                    psUpdate.setInt(2, idCommande);
+                    psUpdate.setInt(3, idArticle);
+                    psUpdate.executeUpdate();
                 }
+
             } else {
-                try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
-                    insertStmt.setInt(1, idCommande);
-                    insertStmt.setInt(2, idArticle);
-                    insertStmt.setInt(3, quantite);
-                    insertStmt.executeUpdate();
+                try (PreparedStatement psInsert = conn.prepareStatement(insertSql)) {
+                    psInsert.setInt(1, idCommande);
+                    psInsert.setInt(2, idArticle);
+                    psInsert.setInt(3, quantiteAjout);
+                    psInsert.executeUpdate();
                 }
             }
         }
     }
+    public void clearLignesCommande(int idCommande) throws SQLException {
+        String sql = "DELETE FROM LigneCommande WHERE idCommande = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idCommande);
+            ps.executeUpdate();
+        }
+    }
+
 
 
 }
