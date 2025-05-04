@@ -9,7 +9,7 @@ import java.io.IOException;
 public class AdminController {
 
     @FXML
-    private StackPane contentPane; // Référence à ton StackPane dans le FXML
+    private StackPane contentPane;
 
     // Méthode appelée lorsque l'utilisateur clique sur "Inventaire"
     @FXML

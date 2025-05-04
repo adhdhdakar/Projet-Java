@@ -84,4 +84,39 @@ public class ClientDAO {
             return false;
         }
     }
+
+    public boolean updateClientAdmin(Client client) {
+        String sql = "UPDATE Client SET nom = ?, prenom = ?, email = ?, typeClient = ? WHERE idClient = ?";
+
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, client.getNom());
+            stmt.setString(2, client.getPrenom());
+            stmt.setString(3, client.getEmail());
+            stmt.setString(4, client.getTypeClient());
+            stmt.setInt(5, client.getIdClient());
+
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean delete(int idClient) {
+        String sql = "DELETE FROM Client WHERE idClient = ?";
+
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idClient);
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
