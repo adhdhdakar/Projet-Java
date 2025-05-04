@@ -8,20 +8,20 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="523.0" prefWidth="556.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InventaireAdminController">
+<AnchorPane prefHeight="499.0" prefWidth="646.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InventaireAdminController">
     <VBox alignment="TOP_CENTER" prefHeight="513.0" prefWidth="537.0" spacing="10.0" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10">
 
         <!-- Barre de recherche -->
         <TextField fx:id="searchField" prefHeight="26.0" prefWidth="528.0" promptText="Rechercher un achat par nom d'article ou client..." />
 
         <!-- Tableau des achats clients -->
-        <TableView fx:id="tableAchats" prefHeight="423.0" prefWidth="564.0">
+        <TableView fx:id="tableAchats" prefHeight="386.0" prefWidth="622.0">
             <columns>
-                <TableColumn fx:id="colArticle" prefWidth="112.0" text="Nom de l'article" />
-                <TableColumn fx:id="colClient" prefWidth="134.0" text="Nom du client" />
-                <TableColumn fx:id="colQuantite" prefWidth="69.0" text="Quantité" />
-                <TableColumn fx:id="colDate" prefWidth="121.0" text="Date d'achat" />
-                <TableColumn fx:id="colNum" prefWidth="95.0" text="N° Commande" />
+                <TableColumn fx:id="colArticle" prefWidth="144.0" text="Nom de l'article" />
+                <TableColumn fx:id="colClient" prefWidth="142.0" text="Nom du client" />
+                <TableColumn fx:id="colQuantite" prefWidth="89.0" text="Quantité" />
+                <TableColumn fx:id="colDate" prefWidth="138.0" text="Date d'achat" />
+                <TableColumn fx:id="colNum" prefWidth="107.0" text="N° Commande" />
             </columns>
         </TableView>
 
