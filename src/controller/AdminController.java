@@ -29,6 +29,12 @@ public class AdminController {
         loadView("/view/ClientsAdmin.fxml");
     }
 
+    // Méthode appelée lorsque l'utilisateur clique sur "Articles"
+    @FXML
+    private void handleArticles() {
+        loadView("/view/ArticlesAdmin.fxml");
+    }
+
     // Méthode appelée lorsque l'utilisateur clique sur "Statistiques"
     @FXML
     private void handleStats() {

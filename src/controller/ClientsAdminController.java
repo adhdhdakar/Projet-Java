@@ -21,9 +21,6 @@ public class ClientsAdminController {
     @FXML
     private TextField searchClientField, nomField, prenomField, emailField;
 
-    @FXML
-    private Button btnModifierClient, btnSupprimerClient;
-
     private FilteredList<Client> filteredClients;
     private ClientDAO clientDAO = new ClientDAO();
 
@@ -46,8 +43,6 @@ public class ClientsAdminController {
             });
         });
 
-        btnModifierClient.setOnAction(e -> handleModifierClient());
-        btnSupprimerClient.setOnAction(e -> handleSupprimerClient());
     }
 
     private void loadClients() {

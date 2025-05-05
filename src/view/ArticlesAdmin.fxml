@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="488.0" prefWidth="648.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ArticlesAdminController">
+    <VBox alignment="TOP_CENTER" prefHeight="471.0" prefWidth="623.0" spacing="10.0" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10">
+
+        <!-- Barre de recherche -->
+        <TextField fx:id="searchField" prefHeight="26.0" prefWidth="528.0" promptText="Rechercher un achat par nom d'article ou client..." />
+
+        <!-- Tableau des achats clients -->
+        <TableView fx:id="tableAchats" prefHeight="388.0" prefWidth="623.0">
+            <columns>
+                <TableColumn fx:id="colArticle" prefWidth="144.0" text="Nom de l'article" />
+                <TableColumn fx:id="colDescription" prefWidth="142.0" text="Description" />
+                <TableColumn fx:id="colPrix" prefWidth="89.0" text="Prix unitaire" />
+                <TableColumn fx:id="colPrixVrac" prefWidth="89.0" text="Prix Vrac" />
+                <TableColumn fx:id="colQuantiteVrac" prefWidth="138.0" text="Quantité vrac" />
+                <TableColumn fx:id="colStock" prefWidth="107.0" text="Stock" />
+            </columns>
+        </TableView>
+
+        <HBox alignment="CENTER" prefHeight="30.0" prefWidth="529.0" spacing="10.0">
+            <Button fx:id="btnAjouter" onAction="#handleAjouter" text="Ajouter" />
+            <Button fx:id="btnModifier" onAction="#handleModifier" text="Modifier" />
+            <Button fx:id="btnSupprimer" onAction="#handleSupprimer" text="Supprimer" />
+        </HBox>
+
+    </VBox>
+</AnchorPane>

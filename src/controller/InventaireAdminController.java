@@ -37,12 +37,6 @@ public class InventaireAdminController {
     private FilteredList<Achat> filteredData;
 
     @FXML
-    private Button btnModifier;
-
-    @FXML
-    private Button btnSupprimer;
-
-    @FXML
     public void initialize() {
         colArticle.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getNomArticle()));
         colClient.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getNomCompletClient()));
