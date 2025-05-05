@@ -2,6 +2,9 @@ package dao;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import model.Commande;
 
 public class CommandeDAO {
@@ -72,8 +75,7 @@ public class CommandeDAO {
     }
 
     public Commande findByClientAndStatus(int idClient, String statut) throws SQLException {
-        String sql = "SELECT idCommande, dateCommande, idClient, statut "
-                + "FROM Commande WHERE idClient = ? AND statut = ?";
+        String sql = "SELECT idCommande, dateCommande, idClient, statut FROM Commande WHERE idClient = ? AND statut = ?";
         try (Connection conn = Connexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idClient);
@@ -84,7 +86,8 @@ public class CommandeDAO {
                             rs.getInt("idCommande"),
                             rs.getDate("dateCommande").toLocalDate(),
                             rs.getInt("idClient"),
-                            rs.getString("statut")
+                            rs.getString("statut"),
+                            0.0  // valeur temporaire car cette méthode ne calcule pas le total
                     );
                 }
             }
@@ -100,6 +103,35 @@ public class CommandeDAO {
             ps.setInt(2, idCommande);
             ps.executeUpdate();
         }
+    }
+
+
+    public List<Commande> findValideByClient(int idClient) throws SQLException {
+        List<Commande> commandes = new ArrayList<>();
+        String sql = "SELECT c.idCommande, c.dateCommande, c.idClient, c.statut, " +
+                "SUM(a.prixUnitaire * lc.quantite) AS total " +
+                "FROM Commande c " +
+                "JOIN LigneCommande lc ON c.idCommande = lc.idCommande " +
+                "JOIN Article a ON lc.idArticle = a.idArticle " +
+                "WHERE c.idClient = ? AND c.statut = 'VALIDEE' " +
+                "GROUP BY c.idCommande";
+
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idClient);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                commandes.add(new Commande(
+                        rs.getInt("idCommande"),
+                        rs.getDate("dateCommande").toLocalDate(),
+                        rs.getInt("idClient"),
+                        rs.getString("statut"),
+                        rs.getDouble("total")
+                ));
+            }
+        }
+
+        return commandes;
     }
 
 

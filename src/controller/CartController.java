@@ -95,7 +95,6 @@ public class CartController {
             for (ArticleInCart item : items) {
                 int idArticle = item.getArticle().getIdArticle();
                 int quantite = item.getQuantite();
-                ligneDAO.create(idCommande, idArticle, quantite);
                 int newStock = item.getArticle().getStock() - quantite;
                 artDAO.updateStock(idArticle, newStock);
             }
@@ -115,7 +114,7 @@ public class CartController {
     private void handleReturn(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/MainPage.fxml"));
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 600, 400));
+        stage.setScene(new Scene(root, 800, 600));
         stage.setTitle("Page Principale");
     }
 }

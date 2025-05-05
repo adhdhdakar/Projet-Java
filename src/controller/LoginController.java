@@ -57,7 +57,7 @@ public class LoginController {
                 Parent root = loader.load();
                 Stage stage = new Stage();
                 stage.setTitle("Accueil");
-                stage.setScene(new Scene(root, 600, 400));
+                stage.setScene(new Scene(root, 800, 600));
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -78,7 +78,7 @@ public class LoginController {
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setTitle("Inscription");
-            stage.setScene(new Scene(root, 600, 400));
+            stage.setScene(new Scene(root, 800, 600));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

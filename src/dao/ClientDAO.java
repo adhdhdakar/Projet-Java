@@ -84,4 +84,21 @@ public class ClientDAO {
             return false;
         }
     }
+
+    public void update(Client client) throws SQLException {
+        String sql = "UPDATE Client SET nom = ?, prenom = ?, email = ?, motDePasse = ? WHERE idClient = ?";
+
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, client.getNom());
+            stmt.setString(2, client.getPrenom());
+            stmt.setString(3, client.getEmail());
+            stmt.setString(4, client.getMotDePasse());
+            stmt.setInt(5, client.getIdClient());
+
+            stmt.executeUpdate();
+        }
+    }
+
 }
