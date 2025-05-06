@@ -20,7 +20,7 @@ public class CartDAO {
                         "FROM Commande c " +
                         "  JOIN LigneCommande lc ON c.idCommande = lc.idCommande " +
                         "  JOIN Article a      ON a.idArticle  = lc.idArticle " +
-                        "WHERE c.idClient = ? AND c.statut = 'PANIER'\n";
+                        "WHERE c.idClient = ? AND c.statut = 'EC'\n";
 
         try (Connection conn = Connexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
