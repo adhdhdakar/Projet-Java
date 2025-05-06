@@ -121,25 +121,47 @@ public class CartController {
             Optional<String> res = dlg.showAndWait();
             if (res.isPresent()) {
                 try {
+                    int oldQty = it.getQuantite();
                     int newQty = Integer.parseInt(res.get());
                     if (newQty <= 0) {
                         showAlert("Veuillez entrer un entier positif.");
                         return;
                     }
+
+                    int diff = newQty - oldQty;
+                    // Si on veut augmenter la quantité
+                    if (diff > 0) {
+                        // 1) Vérifier le stock dispo
+                        int stockDispo = artDAO.getStock(it.getArticle().getIdArticle());
+                        if (diff > stockDispo) {
+                            showAlert("Stock insuffisant. Disponible : " + stockDispo);
+                            return;
+                        }
+                        // 2) Décrémenter le stock de la différence
+                        artDAO.decrementStock(it.getArticle().getIdArticle(), diff);
+                    }
+                    // Si on réduit la quantité, on rend du stock
+                    else if (diff < 0) {
+                        artDAO.incrementStock(it.getArticle().getIdArticle(), -diff);
+                    }
+
+                    // Mise à jour de la ligne en base
                     ligneDAO.updateQuantite(
                             cmdEnCours.getIdCommande(),
                             it.getArticle().getIdArticle(),
                             newQty
                     );
+
+                    // Mise à jour du modèle et de l’affichage
                     it.setQuantite(newQty);
                     lblQty.setText("Quantité : " + newQty);
                     lblTotal.setText(String.format("Total : %.2f €", it.getTotal()));
                     updateTotal();
+
                 } catch (NumberFormatException ex) {
                     showAlert("Quantité invalide !");
                 } catch (SQLException ex) {
-                    ex.printStackTrace();
-                    showAlert("Erreur lors de la mise à jour.");
+                    showAlert("Erreur SQL : " + ex.getMessage());
                 }
             }
         });
@@ -148,16 +170,23 @@ public class CartController {
         Button btnDelete = new Button("Supprimer");
         btnDelete.setOnAction(e -> {
             try {
+                int qtyToReturn = it.getQuantite();
+                // On réinjecte toute la quantité dans le stock
+                artDAO.incrementStock(it.getArticle().getIdArticle(), qtyToReturn);
+
+                // On supprime la ligne de commande
                 ligneDAO.delete(
                         cmdEnCours.getIdCommande(),
                         it.getArticle().getIdArticle()
                 );
+
+                // On retire la carte et l'item du modèle
                 cardContainer.getChildren().remove(card);
                 items.remove(it);
                 updateTotal();
+
             } catch (SQLException ex) {
-                ex.printStackTrace();
-                showAlert("Erreur lors de la suppression.");
+                showAlert("Erreur lors de la suppression : " + ex.getMessage());
             }
         });
 
@@ -183,7 +212,7 @@ public class CartController {
         try {
             cmdDAO.updateStatut(cmdEnCours.getIdCommande(), "VA");
             new Alert(Alert.AlertType.INFORMATION,
-                    "✅ Votre commande n°" + cmdEnCours.getIdCommande() + " a été validée !").showAndWait();
+                    "Votre commande n°" + cmdEnCours.getIdCommande() + " a été validée !").showAndWait();
 
             items.clear();
             cardContainer.getChildren().clear();
@@ -191,7 +220,7 @@ public class CartController {
             cmdEnCours = null;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "❌ Erreur lors de la validation de la commande.").showAndWait();
+            new Alert(Alert.AlertType.ERROR, " Erreur lors de la validation de la commande.").showAndWait();
         }
     }
 

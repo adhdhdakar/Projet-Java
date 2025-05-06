@@ -37,15 +37,7 @@ public class ArticleDAO {
         return articles;
     }
 
-    public void updateStock(int idArticle, int nouveauStock) throws SQLException {
-        String sql = "UPDATE Article SET stock = ? WHERE idArticle = ?";
-        try (Connection conn = Connexion.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, nouveauStock);
-            ps.setInt(2, idArticle);
-            ps.executeUpdate();
-        }
-    }
+
 
     public int getOrCreatePanierCommande(int idClient) {
         try (Connection conn = Connexion.getConnection()) {
@@ -92,5 +84,46 @@ public class ArticleDAO {
             }
         }
         return null;
+    }
+
+    public void decrementStock(int idArticle, int quantite) throws SQLException {
+        String sql = "UPDATE Article "
+                + "SET stock = stock - ? "
+                + "WHERE idArticle = ? AND stock >= ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, quantite);
+            ps.setInt(2, idArticle);
+            ps.setInt(3, quantite);
+            int updated = ps.executeUpdate();
+            if (updated == 0) {
+                throw new SQLException("Stock insuffisant pour l'article " + idArticle);
+            }
+        }
+    }
+
+    public int getStock(int idArticle) throws SQLException {
+        String sql = "SELECT stock FROM Article WHERE idArticle = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idArticle);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt("stock");
+                else throw new SQLException("Article introuvable");
+            }
+        }
+    }
+
+    public void incrementStock(int idArticle, int quantite) throws SQLException {
+        String sql = "UPDATE Article SET stock = stock + ? WHERE idArticle = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, quantite);
+            ps.setInt(2, idArticle);
+            int updated = ps.executeUpdate();
+            if (updated == 0) {
+                throw new SQLException("Article introuvable ou pas de mise à jour pour idArticle=" + idArticle);
+            }
+        }
     }
 }
