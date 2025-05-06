@@ -80,5 +80,28 @@ public class LigneCommandeDAO {
         }
     }
 
+    // Met à jour la quantité exacte (remplace l’ancienne)
+    public void updateQuantite(int idCommande, int idArticle, int quantite) throws SQLException {
+        String sql = "UPDATE LigneCommande SET quantite = ? WHERE idCommande = ? AND idArticle = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, quantite);
+            ps.setInt(2, idCommande);
+            ps.setInt(3, idArticle);
+            ps.executeUpdate();
+        }
+    }
+
+    // Supprime la ligne de commande
+    public void delete(int idCommande, int idArticle) throws SQLException {
+        String sql = "DELETE FROM LigneCommande WHERE idCommande = ? AND idArticle = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idCommande);
+            ps.setInt(2, idArticle);
+            ps.executeUpdate();
+        }
+    }
+
 
 }

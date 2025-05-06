@@ -16,7 +16,9 @@ public class ArticleInCart {
     public int getQuantite() {
         return quantite;
     }
-
+    public void setQuantite(int quantite) {
+        this.quantite = quantite;
+    }
     /** Calcule le total prix × quantité */
     public double getTotal() {
         return article.getPrixUnitaire() * quantite;
