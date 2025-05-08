@@ -51,18 +51,34 @@ public class LoginController {
             // Fermer la fenêtre de login
             loginButton.getScene().getWindow().hide();
 
-            // Charger et ouvrir MainPage.fxml
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainPage.fxml"));
-                Parent root = loader.load();
-                Stage stage = new Stage();
-                stage.setTitle("Accueil");
-                stage.setScene(new Scene(root, 800, 600));
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //System.out.println(client.getTypeClient());
 
+            // Charger et ouvrir MainPage.fxml si c'est un client
+            if(client.getTypeClient().equals("client")) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainPage.fxml"));
+                    Parent root = loader.load();
+                    Stage stage = new Stage();
+                    stage.setTitle("Accueil");
+                    stage.setScene(new Scene(root, 600, 400));
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else { // sinon on lance Admin.fxml (car typeClient = admin)
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Admin.fxml"));
+                    Parent root = loader.load();
+                    Stage stage = new Stage();
+                    stage.setTitle("Panneau d'administration");
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.sizeToScene();
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         } else {
             messageLabel.setText("Erreur d'identifiants !");
         }
@@ -78,7 +94,7 @@ public class LoginController {
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setTitle("Inscription");
-            stage.setScene(new Scene(root, 800, 600));
+            stage.setScene(new Scene(root, 600, 400));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
