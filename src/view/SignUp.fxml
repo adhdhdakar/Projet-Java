@@ -2,54 +2,111 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
 <StackPane xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="controller.SignUpController"
            style="-fx-background-color: #fdf6f0;">
    <children>
-      <VBox alignment="CENTER" spacing="20.0" prefWidth="400.0"
-            style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 4);">
+      <VBox alignment="CENTER"
+            spacing="15.0"
+            prefWidth="350.0"
+            style="-fx-background-color: white;
+                   -fx-background-radius: 15;
+                   -fx-padding: 30;
+                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 4);">
          <children>
 
-            <Label text="Inscription" style="-fx-font-size: 26px; -fx-font-weight: bold;" />
+            <!-- Logo + nom de l'app -->
+            <HBox alignment="CENTER" spacing="8">
+               <children>
+                  <ImageView fitHeight="40" preserveRatio="true">
+                     <image>
+                        <Image url="@/images/logoDarkShop.png"/>
+                     </image>
+                  </ImageView>
+                  <Label text="DarkShop"
+                         style="-fx-font-size: 24px;
+                                -fx-font-weight: bold;
+                                -fx-text-fill: #333;" />
+               </children>
+            </HBox>
 
-            <VBox spacing="10.0" alignment="CENTER_LEFT">
+            <!-- Titre Inscription -->
+            <Label text="Inscription"
+                   style="-fx-font-size: 20px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: #333;" />
+
+            <!-- Prénom -->
+            <VBox spacing="8.0" alignment="CENTER_LEFT">
                <children>
                   <Label text="Prénom" />
-                  <TextField fx:id="prenomField" promptText="Entrez votre prénom" prefWidth="300.0"
-                             style="-fx-background-radius: 8; -fx-padding: 8;" />
+                  <TextField fx:id="prenomField"
+                             promptText="Entrez votre prénom"
+                             prefWidth="250.0"
+                             style="-fx-background-radius: 8;
+                                    -fx-padding: 6;" />
                </children>
             </VBox>
 
-            <VBox spacing="10.0" alignment="CENTER_LEFT">
+            <!-- Nom -->
+            <VBox spacing="8.0" alignment="CENTER_LEFT">
+               <children>
+                  <Label text="Nom" />
+                  <TextField fx:id="nomField"
+                             promptText="Entrez votre nom"
+                             prefWidth="250.0"
+                             style="-fx-background-radius: 8;
+                                    -fx-padding: 6;" />
+               </children>
+            </VBox>
+
+            <!-- Email -->
+            <VBox spacing="8.0" alignment="CENTER_LEFT">
                <children>
                   <Label text="Email" />
-                  <TextField fx:id="emailField" promptText="Entrez votre email" prefWidth="300.0"
-                             style="-fx-background-radius: 8; -fx-padding: 8;" />
+                  <TextField fx:id="emailField"
+                             promptText="Entrez votre email"
+                             prefWidth="250.0"
+                             style="-fx-background-radius: 8;
+                                    -fx-padding: 6;" />
                </children>
             </VBox>
 
-            <VBox spacing="10.0" alignment="CENTER_LEFT">
+            <!-- Mot de passe -->
+            <VBox spacing="8.0" alignment="CENTER_LEFT">
                <children>
                   <Label text="Mot de passe" />
-                  <PasswordField fx:id="mdpField" promptText="Entrez votre mot de passe" prefWidth="300.0"
-                                 style="-fx-background-radius: 8; -fx-padding: 8;" />
+                  <PasswordField fx:id="mdpField"
+                                 promptText="Entrez votre mot de passe"
+                                 prefWidth="250.0"
+                                 style="-fx-background-radius: 8;
+                                        -fx-padding: 6;" />
                </children>
             </VBox>
 
-            <Button fx:id="signUpButton" text="Créer un compte" prefWidth="200.0"
-                    style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold;"
+            <!-- Bouton Créer un compte -->
+            <Button fx:id="signUpButton"
+                    text="Créer un compte"
+                    prefWidth="180.0"
+                    style="-fx-background-color: #e67e22;
+                           -fx-text-fill: white;
+                           -fx-background-radius: 8;
+                           -fx-font-weight: bold;"
                     onAction="#handleSignUp" />
 
+            <!-- Bouton Retour -->
+            <Button text="Retour"
+                    onAction="#handleRetour"
+                    style="-fx-background-color: transparent;
+                           -fx-text-fill: #666;
+                           -fx-underline: true;" />
+
          </children>
-         <Button text="Retour"
-                 onAction="#handleRetour"
-                 style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-underline: true;" />
-
       </VBox>
-
    </children>
 </StackPane>

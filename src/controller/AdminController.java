@@ -47,9 +47,16 @@ public class AdminController {
 
             Stage loginStage = new Stage();
             loginStage.setTitle("Connexion");
-            loginStage.setScene(new Scene(root, 800, 600));
+            loginStage.setScene(new Scene(root));
+
+            // ← ici on maximise la nouvelle fenêtre
+            loginStage.setMaximized(true);
+            // ou, si vous préférez le mode « vrai plein-écran » sans bordures :
+            // loginStage.setFullScreen(true);
+
             loginStage.show();
 
+            // Ferme l'ancienne fenêtre
             Stage currentStage = (Stage) contentPane.getScene().getWindow();
             currentStage.close();
 
