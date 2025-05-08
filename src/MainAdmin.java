@@ -1,6 +1,5 @@
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.layout.AnchorPane;
@@ -10,7 +9,7 @@ public class MainAdmin extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Charger le fichier FXML principal (AdminController.fxml)
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/admin.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Admin.fxml"));
         AnchorPane root = loader.load();
 
         // Initialiser la scène

@@ -35,6 +35,14 @@ public class LoginController {
         signupButton.setOnAction(this::handleSignup);
     }
 
+    private void openInSameWindow(Parent root, String title) {
+        Stage stage = (Stage) loginButton.getScene().getWindow();
+        stage.setTitle(title);
+        stage.setScene(new Scene(root));
+        stage.setMaximized(true);
+        stage.show();
+    }
+
     private void handleLogin(ActionEvent event) {
         String email = emailField.getText();
         String password = passwordField.getText();
@@ -51,16 +59,30 @@ public class LoginController {
             // Fermer la fenêtre de login
             loginButton.getScene().getWindow().hide();
 
-            // Charger et ouvrir MainPage.fxml
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainPage.fxml"));
-                Parent root = loader.load();
-                Stage stage = new Stage();
-                stage.setTitle("Accueil");
-                stage.setScene(new Scene(root, 800, 600));
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
+            //System.out.println(client.getTypeClient());
+
+            // Charger et ouvrir MainPage.fxml si c'est un client
+            if(client.getTypeClient().equals("client")) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainPage.fxml"));
+                    Parent root = loader.load();
+                    openInSameWindow(root, "Accueil");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else { // sinon on lance Admin.fxml (car typeClient = admin)
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Admin.fxml"));
+                    Parent root = loader.load();
+                    Stage stage = new Stage();
+                    stage.setTitle("Panneau d'administration");
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.sizeToScene();
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
         } else {
@@ -76,10 +98,7 @@ public class LoginController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignUp.fxml"));
             Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Inscription");
-            stage.setScene(new Scene(root, 800, 600));
-            stage.show();
+            openInSameWindow(root, "Inscription");
         } catch (IOException e) {
             e.printStackTrace();
         }

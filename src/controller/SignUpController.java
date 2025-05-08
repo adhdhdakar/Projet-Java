@@ -4,6 +4,7 @@ import dao.ClientDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -46,24 +47,22 @@ public class SignUpController {
         boolean success = dao.create(client);
 
         if (success) {
-
-            redirectToLogin();
+            redirectToLogin(event);
         } else {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Email déjà utilisé ?");
         }
     }
 
-    private void redirectToLogin() {
+    private void redirectToLogin(ActionEvent event) {
         try {
-            // Fermer la fenêtre actuelle (signup)
-            signUpButton.getScene().getWindow().hide();
-
-            // Charger et afficher la fenêtre de connexion
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
+            // Fermer la fenêtre actuelle
+            ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setTitle("Page de connexion");
-            stage.setScene(new Scene(root, 800, 600));
+            stage.setScene(new Scene(root));
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,5 +75,15 @@ public class SignUpController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void handleRetour(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+        stage.setScene(new Scene(root));
+        stage.setTitle("Page de connexion");
+        stage.setMaximized(true);
+        stage.show();
     }
 }

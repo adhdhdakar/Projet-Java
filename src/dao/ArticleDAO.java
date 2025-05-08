@@ -73,7 +73,6 @@ public class ArticleDAO {
     }
 
 
-
     /**
      * Récupère un article par son ID (avec tous les champs nécessaires).
      */
@@ -98,6 +97,87 @@ public class ArticleDAO {
             }
         }
         return null;
+    }
+    public List<String> findAllArticleNoms() {
+        List<String> noms = new ArrayList<>();
+        String sql = "SELECT nom FROM Article";
+
+        try (Connection conn = Connexion.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                noms.add(rs.getString("nom"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return noms;
+    }
+
+    public int findIdByNom(String nomArticle) {
+        String sql = "SELECT idArticle FROM Article WHERE nom = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, nomArticle);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("idArticle");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public boolean create(Article article) {
+        String sql = "INSERT INTO Article (nom, description, prixUnitaire, prixVrac, quantiteVrac, stock) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, article.getNom());
+            stmt.setString(2, article.getDescription());
+            stmt.setDouble(3, article.getPrixUnitaire());
+            stmt.setDouble(4, article.getPrixVrac());
+            stmt.setInt(5, article.getQuantiteVrac());
+            stmt.setInt(6, article.getStock());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean update(Article article) {
+        String sql = "UPDATE Article SET nom = ?, description = ?, prixUnitaire = ?, prixVrac = ?, quantiteVrac = ?, stock = ? WHERE idArticle = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, article.getNom());
+            stmt.setString(2, article.getDescription());
+            stmt.setDouble(3, article.getPrixUnitaire());
+            stmt.setDouble(4, article.getPrixVrac());
+            stmt.setInt(5, article.getQuantiteVrac());
+            stmt.setInt(6, article.getStock());
+            stmt.setInt(7, article.getIdArticle());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean delete(int idArticle) {
+        String sql = "DELETE FROM Article WHERE idArticle = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idArticle);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void decrementStock(int idArticle, int quantite) throws SQLException {
