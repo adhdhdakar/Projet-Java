@@ -18,6 +18,9 @@ public class SignUpController {
     private TextField prenomField;
 
     @FXML
+    private TextField nomField;
+
+    @FXML
     private TextField emailField;
 
     @FXML
@@ -29,6 +32,7 @@ public class SignUpController {
     @FXML
     private void handleSignUp(ActionEvent event) {
         String prenom = prenomField.getText();
+        String nom = nomField.getText();
         String email = emailField.getText();
         String mdp = mdpField.getText();
 
@@ -37,7 +41,7 @@ public class SignUpController {
             return;
         }
 
-        Client client = new Client(0, prenom, "", email, mdp, "nouveau");
+        Client client = new Client(0, nom, prenom, email, mdp, "nouveau");
         ClientDAO dao = new ClientDAO();
         boolean success = dao.create(client);
 
@@ -59,7 +63,7 @@ public class SignUpController {
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setTitle("Page de connexion");
-            stage.setScene(new Scene(root, 600, 400));
+            stage.setScene(new Scene(root, 800, 600));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

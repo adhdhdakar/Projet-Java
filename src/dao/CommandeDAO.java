@@ -2,15 +2,18 @@ package dao;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import model.Commande;
 
 public class CommandeDAO {
 
     /**
-     * Crée une nouvelle commande avec l'état "validee"
+     * Crée une nouvelle commande avec l'état "VA"
      */
     public int create(LocalDate date, int idClient) throws SQLException {
-        String sql = "INSERT INTO Commande (dateCommande, idClient, etat) VALUES (?, ?, 'validee')";
+        String sql = "INSERT INTO Commande (dateCommande, idClient, statut) VALUES (?, ?, 'VA')";
 
         try (Connection conn = Connexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -32,7 +35,7 @@ public class CommandeDAO {
      * Crée une commande panier si aucune n'existe déjà
      */
     public int getOrCreatePanierCommande(int idClient) throws SQLException {
-        String select = "SELECT idCommande FROM Commande WHERE idClient = ? AND etat = 'panier'";
+        String select = "SELECT idCommande FROM Commande WHERE idClient = ? AND statut = 'EC'";
         try (Connection conn = Connexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(select)) {
 
@@ -44,7 +47,7 @@ public class CommandeDAO {
         }
 
         // Si aucune commande "panier" n'existe, on la crée
-        String insert = "INSERT INTO Commande (dateCommande, idClient, etat) VALUES (?, ?, 'panier')";
+        String insert = "INSERT INTO Commande (dateCommande, idClient, statut) VALUES (?, ?, 'EC')";
         try (Connection conn = Connexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -64,7 +67,7 @@ public class CommandeDAO {
     //Valide une commande panier (change son état)
 
     public void validerCommande(int idCommande) throws SQLException {
-        String sql = "UPDATE Commande SET etat = 'validee' WHERE idCommande = ?";
+        String sql = "UPDATE Commande SET statut = 'VA' WHERE idCommande = ?";
         try (Connection conn = Connexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -105,4 +108,24 @@ public class CommandeDAO {
             ps.executeUpdate();
         }
     }
+
+    public List<Commande> findValideByClient(int idClient) throws SQLException {
+        List<Commande> commandes = new ArrayList<>();
+        String sql = "SELECT * FROM Commande WHERE idClient = ? AND statut = 'VA'";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idClient);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                commandes.add(new Commande(
+                        rs.getInt("idCommande"),
+                        rs.getDate("dateCommande").toLocalDate(),
+                        rs.getInt("idClient"),
+                        rs.getString("statut")
+                ));
+            }
+        }
+        return commandes;
+    }
+
 }

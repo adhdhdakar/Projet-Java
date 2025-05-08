@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.control.ScrollPane?>
-
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
-<ScrollPane xmlns="http://javafx.com/javafx/23.0.1"
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.HomeController"
-            fitToWidth="true">
+            style="-fx-background-color: #fff9f0;">
 
-    <content>
-        <FlowPane fx:id="productContainer"
-                  hgap="20" vgap="20"
-                  style="-fx-background-color: #f9f9f9;">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
-        </FlowPane>
+    <top>
+        <HBox alignment="CENTER" spacing="10" style="-fx-padding: 20 0 10 0; -fx-background-color: white;">
+            <children>
+                <Label text="Bienvenue sur la boutique"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: black;" />
+            </children>
+        </HBox>
+    </top>
 
-    </content>
-</ScrollPane>
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-padding: 0 20 20 20;">
+            <content>
+                <FlowPane fx:id="productContainer"
+                          hgap="20" vgap="20"
+                          style="-fx-background-color: transparent; -fx-padding: 20; -fx-alignment: center;" />
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>
