@@ -4,9 +4,11 @@ import dao.ArticleDAO;
 import dao.LigneCommandeDAO;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class HomeController {
 
@@ -44,6 +47,7 @@ public class HomeController {
     }
 
     private VBox createCard(Article article) {
+        // Chargement de l’image
         String path = "/images/" + article.getIdArticle() + ".png";
         InputStream is = getClass().getResourceAsStream(path);
         Image img = (is != null)
@@ -54,27 +58,64 @@ public class HomeController {
         iv.setFitWidth(120);
         iv.setPreserveRatio(true);
 
-        Label lblName = new Label(article.getNom());
+        // Infos produit
+        Label lblName  = new Label(article.getNom());
         lblName.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-
         Label lblPrice = new Label(String.format("%.2f €", article.getPrixUnitaire()));
         lblPrice.setStyle("-fx-font-size: 12px;");
 
+        // Bouton Ajouter au panier
         Button btnAdd = new Button("Ajouter au panier");
-        btnAdd.setStyle("-fx-background-color: #ff6600; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 8 20;");
         btnAdd.setOnAction(e -> {
+            // Vérif connexion
             if (Session.getInstance().getClient() == null) {
                 showAlert("Veuillez vous connecter.");
                 return;
             }
 
-            int idCommande;
-            try {
-                idCommande = articleDAO.getOrCreatePanierCommande(Session.getInstance().getClient().getIdClient());
-                ligneDAO.createOrIncrement(idCommande, article.getIdArticle(), 1);
-                showAlert("Ajouté au panier !");
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+            // Saisie de la quantité
+            TextInputDialog quantityDialog = new TextInputDialog("1");
+            quantityDialog.setTitle("Quantité");
+            quantityDialog.setHeaderText("Choisir la quantité");
+            quantityDialog.setContentText("Quantité :");
+            Optional<String> result = quantityDialog.showAndWait();
+
+            if (result.isPresent()) {
+                try {
+                    int quantity = Integer.parseInt(result.get());
+
+                    // Quantité positive
+                    if (quantity <= 0) {
+                        showAlert("Veuillez entrer un nombre entier positif.");
+                        return;
+                    }
+
+                    // Vérif stock dispo
+                    int stockDispo = articleDAO.getStock(article.getIdArticle());
+                    if (quantity > stockDispo) {
+                        showAlert("Stock insuffisant. Disponible : " + stockDispo);
+                        return;
+                    }
+
+                    // Récupère/crée la commande panier
+                    int idCommande = articleDAO.getOrCreatePanierCommande(
+                            Session.getInstance().getClient().getIdClient()
+                    );
+
+                    // Ajoute/incrémente la ligne
+                    ligneDAO.createOrIncrement(idCommande, article.getIdArticle(), quantity);
+
+                    // Décrémente le stock en base
+                    articleDAO.decrementStock(article.getIdArticle(), quantity);
+
+                    // Confirmation
+                    showAlert("Ajouté au panier !");
+
+                } catch (NumberFormatException ex) {
+                    showAlert("Quantité invalide : veuillez entrer un entier.");
+                } catch (SQLException ex) {
+                    showAlert("Erreur lors de l’ajout au panier : " + ex.getMessage());
+                }
             }
         });
 

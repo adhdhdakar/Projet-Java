@@ -12,18 +12,14 @@ public class Commande {
     private LocalDate dateCommande;
     private int idClient;
     private String statut;
-    private double total;
-
 
     /** Constructeur complet (généralement pour lecture depuis la BDD). */
-    public Commande(int idCommande, LocalDate dateCommande, int idClient, String statut, double total) {
-        this.idCommande = idCommande;
+    public Commande(int idCommande, LocalDate dateCommande, int idClient, String statut) {
+        this.idCommande  = idCommande;
         this.dateCommande = dateCommande;
-        this.idClient = idClient;
-        this.statut = statut;
-        this.total = total;
+        this.idClient    = idClient;
+        this.statut      = statut;
     }
-
 
     /** Constructeur sans id (pour création avant insertion). */
     public Commande(LocalDate dateCommande, int idClient, String statut) {
@@ -68,14 +64,6 @@ public class Commande {
 
     public void setStatut(String statut) {
         this.statut = statut;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
     }
 
     // ――― equals / hashCode / toString ―――
