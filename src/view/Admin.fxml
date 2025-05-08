@@ -25,7 +25,7 @@
                   <Button fx:id="btnClients" onAction="#handleClients" text="Clients" />
                   <Button fx:id="btnArticles" onAction="#handleArticles" text="Articles" />
                   <Button fx:id="btnStats" onAction="#handleStats" text="Statistiques" />
-                  <Button text="Déconnexion" />
+                  <Button onAction="#handleDeconnexion" text="Déconnexion" />
                </HBox>
             </VBox>
          </top>

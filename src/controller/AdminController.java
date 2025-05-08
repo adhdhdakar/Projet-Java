@@ -3,7 +3,10 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 
 public class AdminController {
@@ -35,15 +38,25 @@ public class AdminController {
         loadView("/view/StatsAdmin.fxml");
     }
 
-    /*
-
     // Méthode appelée lorsque l'utilisateur clique sur "Déconnexion"
     @FXML
-    private void handleLogout() {
-        loadView("/path/to/logout.fxml");
-    }
+    private void handleDeconnexion() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
+            Parent root = loader.load();
 
-    */
+            Stage loginStage = new Stage();
+            loginStage.setTitle("Connexion");
+            loginStage.setScene(new Scene(root, 800, 600));
+            loginStage.show();
+
+            Stage currentStage = (Stage) contentPane.getScene().getWindow();
+            currentStage.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     // Méthode générique pour charger une vue dans le StackPane
     private void loadView(String fxmlPath) {
