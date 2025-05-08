@@ -66,6 +66,8 @@ public class HomeController {
 
         // Bouton Ajouter au panier
         Button btnAdd = new Button("Ajouter au panier");
+        btnAdd.setStyle("-fx-font-size: 14px; -fx-padding: 8 15; -fx-background-color: #ff6600; -fx-text-fill: white; -fx-background-radius: 10; -fx-font-weight: bold;");
+
         btnAdd.setOnAction(e -> {
             // Vérif connexion
             if (Session.getInstance().getClient() == null) {

@@ -49,7 +49,7 @@ public class ArticleDAO {
 
     public int getOrCreatePanierCommande(int idClient) {
         try (Connection conn = Connexion.getConnection()) {
-            String select = "SELECT idCommande FROM Commande WHERE idClient = ? AND statut = 'PANIER' LIMIT 1";
+            String select = "SELECT idCommande FROM Commande WHERE idClient = ? AND statut = 'EC' LIMIT 1";
             PreparedStatement ps = conn.prepareStatement(select);
             ps.setInt(1, idClient);
             ResultSet rs = ps.executeQuery();

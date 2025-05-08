@@ -226,10 +226,12 @@ public class CartController {
 
     @FXML
     private void handleReturn(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("/view/MainPage.fxml"));
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 600, 400));
+        stage.setScene(new Scene(root));
         stage.setTitle("Page Principale");
+        stage.setMaximized(true);
+        stage.show();
     }
 
     private void showAlert(String msg) {

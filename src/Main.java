@@ -9,9 +9,17 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         System.out.println(">> FXML lookup: " + getClass().getResource("/view/Login.fxml"));
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        primaryStage.setScene(new Scene(root, 800, 600));
+
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
         primaryStage.setTitle("Boutique");
+
+        primaryStage.setMaximized(true);
+
         primaryStage.show();
     }
-    public static void main(String[] args) { launch(args); }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
