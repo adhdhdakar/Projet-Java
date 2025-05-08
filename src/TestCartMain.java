@@ -29,7 +29,7 @@ public class TestCartMain extends Application {
 
         // 3. Configurer et afficher la fenêtre
         primaryStage.setTitle("Test : Mon Panier");
-        primaryStage.setScene(new Scene(root, 600, 400));
+        primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
     }
 

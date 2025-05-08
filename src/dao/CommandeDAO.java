@@ -111,21 +111,32 @@ public class CommandeDAO {
 
     public List<Commande> findValideByClient(int idClient) throws SQLException {
         List<Commande> commandes = new ArrayList<>();
-        String sql = "SELECT * FROM Commande WHERE idClient = ? AND statut = 'VA'";
+        String sql = "SELECT c.idCommande, c.dateCommande, c.idClient, c.statut, " +
+                "IFNULL(SUM(a.prixUnitaire * lc.quantite), 0) AS total " +
+                "FROM Commande c " +
+                "LEFT JOIN LigneCommande lc ON c.idCommande = lc.idCommande " +
+                "LEFT JOIN Article a ON lc.idArticle = a.idArticle " +
+                "WHERE c.idClient = ? AND c.statut = 'VA' " +
+                "GROUP BY c.idCommande";
+
         try (Connection conn = Connexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, idClient);
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
-                commandes.add(new Commande(
-                        rs.getInt("idCommande"),
+                Commande c = new Commande(rs.getInt("idCommande"),
                         rs.getDate("dateCommande").toLocalDate(),
                         rs.getInt("idClient"),
-                        rs.getString("statut")
-                ));
+                        rs.getString("statut"),
+                        rs.getDouble("total")
+                );
+                commandes.add(c);
             }
         }
         return commandes;
     }
+
 
 }
