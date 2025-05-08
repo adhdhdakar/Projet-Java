@@ -42,7 +42,7 @@ public class SignUpController {
             return;
         }
 
-        Client client = new Client(0, nom, prenom, email, mdp, "nouveau");
+        Client client = new Client(0, nom, prenom, email, mdp, "client");
         ClientDAO dao = new ClientDAO();
         boolean success = dao.create(client);
 
