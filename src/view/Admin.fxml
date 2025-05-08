@@ -22,7 +22,6 @@
 
                <HBox alignment="CENTER" spacing="10">
                   <Button fx:id="btnInventaire" onAction="#handleInventaire" text="Inventaire" />
-                  <Button fx:id="btnOffres" onAction="#handleOffres" text="Offres" />
                   <Button fx:id="btnClients" onAction="#handleClients" text="Clients" />
                   <Button fx:id="btnArticles" onAction="#handleArticles" text="Articles" />
                   <Button fx:id="btnStats" onAction="#handleStats" text="Statistiques" />

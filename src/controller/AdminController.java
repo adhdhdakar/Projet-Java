@@ -17,12 +17,6 @@ public class AdminController {
         loadView("/view/InventaireAdmin.fxml");
     }
 
-    // Méthode appelée lorsque l'utilisateur clique sur "Offres"
-    @FXML
-    private void handleOffres() {
-        loadView("/view/OffresAdmin.fxml");
-    }
-
     // Méthode appelée lorsque l'utilisateur clique sur "Clients"
     @FXML
     private void handleClients() {
