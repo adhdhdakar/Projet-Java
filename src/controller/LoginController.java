@@ -35,6 +35,14 @@ public class LoginController {
         signupButton.setOnAction(this::handleSignup);
     }
 
+    private void openInSameWindow(Parent root, String title) {
+        Stage stage = (Stage) loginButton.getScene().getWindow();
+        stage.setTitle(title);
+        stage.setScene(new Scene(root));
+        stage.setMaximized(true);
+        stage.show();
+    }
+
     private void handleLogin(ActionEvent event) {
         String email = emailField.getText();
         String password = passwordField.getText();
@@ -55,10 +63,7 @@ public class LoginController {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainPage.fxml"));
                 Parent root = loader.load();
-                Stage stage = new Stage();
-                stage.setTitle("Accueil");
-                stage.setScene(new Scene(root, 800, 600));
-                stage.show();
+                openInSameWindow(root, "Accueil");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -76,10 +81,7 @@ public class LoginController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignUp.fxml"));
             Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Inscription");
-            stage.setScene(new Scene(root, 800, 600));
-            stage.show();
+            openInSameWindow(root, "Inscription");
         } catch (IOException e) {
             e.printStackTrace();
         }
