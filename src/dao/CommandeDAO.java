@@ -2,6 +2,9 @@ package dao;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import model.Commande;
 
 public class CommandeDAO {
@@ -105,4 +108,24 @@ public class CommandeDAO {
             ps.executeUpdate();
         }
     }
+
+    public List<Commande> findValideByClient(int idClient) throws SQLException {
+        List<Commande> commandes = new ArrayList<>();
+        String sql = "SELECT * FROM Commande WHERE idClient = ? AND statut = 'VA'";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idClient);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                commandes.add(new Commande(
+                        rs.getInt("idCommande"),
+                        rs.getDate("dateCommande").toLocalDate(),
+                        rs.getInt("idClient"),
+                        rs.getString("statut")
+                ));
+            }
+        }
+        return commandes;
+    }
+
 }
