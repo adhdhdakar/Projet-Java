@@ -3,6 +3,7 @@ package dao;
 import model.Article;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +38,19 @@ public class ArticleDAO {
         return articles;
     }
 
-
+    public void updateStock(int idArticle, int nouveauStock) throws SQLException {
+        String sql = "UPDATE Article SET stock = ? WHERE idArticle = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, nouveauStock);
+            ps.setInt(2, idArticle);
+            ps.executeUpdate();
+        }
+    }
 
     public int getOrCreatePanierCommande(int idClient) {
         try (Connection conn = Connexion.getConnection()) {
-            String select = "SELECT idCommande FROM Commande WHERE idClient = ? AND statut = 'EC' LIMIT 1";
+            String select = "SELECT idCommande FROM Commande WHERE idClient = ? AND statut = 'PANIER' LIMIT 1";
             PreparedStatement ps = conn.prepareStatement(select);
             ps.setInt(1, idClient);
             ResultSet rs = ps.executeQuery();

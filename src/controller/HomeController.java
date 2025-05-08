@@ -12,10 +12,19 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import model.Article;
 import model.Session;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
@@ -44,6 +53,7 @@ public class HomeController {
         Image img = (is != null)
                 ? new Image(is)
                 : new Image(getClass().getResourceAsStream("/images/default.png"));
+
         ImageView iv = new ImageView(img);
         iv.setFitWidth(120);
         iv.setPreserveRatio(true);
@@ -109,18 +119,16 @@ public class HomeController {
             }
         });
 
-        // Construction de la carte
-        VBox card = new VBox(iv, lblName, lblPrice, btnAdd);
-        card.setSpacing(8);
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+
+        VBox card = new VBox(iv, lblName, lblPrice, spacer, btnAdd);
+        card.setSpacing(10);
         card.setPadding(new Insets(10));
-        card.setStyle(
-                "-fx-background-color: white; " +
-                        "-fx-border-color: #ddd; " +
-                        "-fx-border-radius: 5; " +
-                        "-fx-background-radius: 5;"
-        );
-        card.setPrefWidth(165);
-        card.setAlignment(Pos.CENTER);
+        card.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-background-radius: 10; -fx-border-radius: 10;");
+        card.setPrefWidth(160);
+        card.setPrefHeight(260);
+
         return card;
     }
 
