@@ -1,6 +1,5 @@
 package controller;
 
-import dao.AchatDAO;
 import dao.ArticleDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
@@ -8,7 +7,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import model.Article;
+import javafx.stage.FileChooser;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 public class ArticlesAdminController {
@@ -20,10 +25,10 @@ public class ArticlesAdminController {
 
     private final ArticleDAO articleDAO = new ArticleDAO();
     private FilteredList<Article> filteredArticles;
+    private File selectedImage = null;
 
     @FXML
     public void initialize() {
-        // Cell factories
         colArticle.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getNom()));
         colDescription.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getDescription()));
         colPrix.setCellValueFactory(data -> new javafx.beans.property.SimpleDoubleProperty(data.getValue().getPrixUnitaire()));
@@ -51,15 +56,29 @@ public class ArticlesAdminController {
 
     @FXML
     private void handleAjouter() {
+        selectedImage = null;
         Article article = showArticleDialog(null);
         if (article != null) {
             boolean success = articleDAO.create(article);
             if (success) {
+                int newId = articleDAO.findIdByNom(article.getNom());
+                if (selectedImage != null) {
+                    importImageForArticle(newId, selectedImage);
+                }
                 loadArticles();
-            }
-            else {
+            } else {
                 showAlert("Erreur", "L'ajout a échoué.");
             }
+        }
+    }
+
+    private void importImageForArticle(int idArticle, File imageFile) {
+        try {
+            Path dest = Path.of("src/images", idArticle + ".png");
+            Files.copy(imageFile.toPath(), dest, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible de copier l'image.");
+            e.printStackTrace();
         }
     }
 
@@ -71,14 +90,17 @@ public class ArticlesAdminController {
             return;
         }
 
+        selectedImage = null;
         Article modifie = showArticleDialog(selected);
         if (modifie != null) {
             modifie.setIdArticle(selected.getIdArticle());
             boolean success = articleDAO.update(modifie);
             if (success) {
+                if (selectedImage != null) {
+                    importImageForArticle(selected.getIdArticle(), selectedImage);
+                }
                 loadArticles();
-            }
-            else {
+            } else {
                 showAlert("Erreur", "La modification a échoué.");
             }
         }
@@ -94,15 +116,14 @@ public class ArticlesAdminController {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
-        alert.setHeaderText("Supprimer l'article " + "'" + selected.getNom() + "' ?");
+        alert.setHeaderText("Supprimer l'article '" + selected.getNom() + "' ?");
         alert.setContentText("Cette action est irréversible.");
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                ArticleDAO dao = new ArticleDAO();
-                boolean success = dao.delete(selected.getIdArticle());// on supprime dans la base
+                boolean success = articleDAO.delete(selected.getIdArticle());
                 if (success) {
-                    filteredArticles.getSource().remove(selected); // on supprime localement
+                    filteredArticles.getSource().remove(selected);
                 } else {
                     showAlert("Erreur", "La suppression a échoué.");
                 }
@@ -122,6 +143,19 @@ public class ArticlesAdminController {
         TextField vracField = new TextField();
         TextField stockField = new TextField();
 
+        Button imageButton = new Button("Choisir une image");
+        Label imageLabel = new Label("Aucune image sélectionnée");
+        imageButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Choisir une image PNG");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images PNG", "*.png"));
+            File file = fileChooser.showOpenDialog(null);
+            if (file != null) {
+                selectedImage = file;
+                imageLabel.setText(file.getName());
+            }
+        });
+
         if (existing != null) {
             nomField.setText(existing.getNom());
             descField.setText(existing.getDescription());
@@ -139,6 +173,7 @@ public class ArticlesAdminController {
         grid.addRow(3, new Label("Prix vrac :"), prixVracField);
         grid.addRow(4, new Label("Quantité vrac :"), vracField);
         grid.addRow(5, new Label("Stock :"), stockField);
+        grid.addRow(6, imageButton, imageLabel);
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(btn -> {
@@ -168,5 +203,4 @@ public class ArticlesAdminController {
         alert.setHeaderText(null);
         alert.showAndWait();
     }
-
 }
