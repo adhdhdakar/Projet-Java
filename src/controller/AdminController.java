@@ -9,7 +9,7 @@ import java.io.IOException;
 public class AdminController {
 
     @FXML
-    private StackPane contentPane; // Référence à ton StackPane dans le FXML
+    private StackPane contentPane;
 
     // Méthode appelée lorsque l'utilisateur clique sur "Inventaire"
     @FXML
@@ -17,16 +17,16 @@ public class AdminController {
         loadView("/view/InventaireAdmin.fxml");
     }
 
-    // Méthode appelée lorsque l'utilisateur clique sur "Offres"
-    @FXML
-    private void handleOffres() {
-        loadView("/view/OffresAdmin.fxml");
-    }
-
     // Méthode appelée lorsque l'utilisateur clique sur "Clients"
     @FXML
     private void handleClients() {
         loadView("/view/ClientsAdmin.fxml");
+    }
+
+    // Méthode appelée lorsque l'utilisateur clique sur "Articles"
+    @FXML
+    private void handleArticles() {
+        loadView("/view/ArticlesAdmin.fxml");
     }
 
     // Méthode appelée lorsque l'utilisateur clique sur "Statistiques"

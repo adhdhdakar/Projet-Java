@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="488.0" prefWidth="648.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InventaireAdminController">
+<AnchorPane prefHeight="488.0" prefWidth="648.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ArticlesAdminController">
     <VBox alignment="TOP_CENTER" prefHeight="471.0" prefWidth="623.0" spacing="10.0" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10">
 
         <!-- Barre de recherche -->
@@ -18,14 +18,16 @@
         <TableView fx:id="tableAchats" prefHeight="388.0" prefWidth="623.0">
             <columns>
                 <TableColumn fx:id="colArticle" prefWidth="144.0" text="Nom de l'article" />
-                <TableColumn fx:id="colClient" prefWidth="142.0" text="Nom du client" />
-                <TableColumn fx:id="colQuantite" prefWidth="89.0" text="Quantité" />
-                <TableColumn fx:id="colDate" prefWidth="138.0" text="Date d'achat" />
-                <TableColumn fx:id="colNum" prefWidth="107.0" text="N° Commande" />
+                <TableColumn fx:id="colDescription" prefWidth="142.0" text="Description" />
+                <TableColumn fx:id="colPrix" prefWidth="89.0" text="Prix unitaire" />
+                <TableColumn fx:id="colPrixVrac" prefWidth="89.0" text="Prix Vrac" />
+                <TableColumn fx:id="colQuantiteVrac" prefWidth="138.0" text="Quantité vrac" />
+                <TableColumn fx:id="colStock" prefWidth="107.0" text="Stock" />
             </columns>
         </TableView>
 
         <HBox alignment="CENTER" prefHeight="30.0" prefWidth="529.0" spacing="10.0">
+            <Button fx:id="btnAjouter" onAction="#handleAjouter" text="Ajouter" />
             <Button fx:id="btnModifier" onAction="#handleModifier" text="Modifier" />
             <Button fx:id="btnSupprimer" onAction="#handleSupprimer" text="Supprimer" />
         </HBox>
