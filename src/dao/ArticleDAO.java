@@ -50,23 +50,28 @@ public class ArticleDAO {
 
     public int getOrCreatePanierCommande(int idClient) {
         try (Connection conn = Connexion.getConnection()) {
-            String select = "SELECT idCommande FROM Commande WHERE idClient = ? AND statut = 'PANIER' LIMIT 1";
-            PreparedStatement ps = conn.prepareStatement(select);
-            ps.setInt(1, idClient);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
+            String select = "SELECT idCommande FROM Commande WHERE idClient = ? AND statut = 'EC' LIMIT 1";
+            try (PreparedStatement ps = conn.prepareStatement(select)) {
+                ps.setInt(1, idClient);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) return rs.getInt(1);
+            }
 
+            // Crée la commande que si on ajt un article
             String insert = "INSERT INTO Commande (dateCommande, idClient, statut) VALUES (NOW(), ?, 'EC')";
-            PreparedStatement psInsert = conn.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
-            psInsert.setInt(1, idClient);
-            psInsert.executeUpdate();
-            ResultSet keys = psInsert.getGeneratedKeys();
-            if (keys.next()) return keys.getInt(1);
+            try (PreparedStatement psInsert = conn.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
+                psInsert.setInt(1, idClient);
+                psInsert.executeUpdate();
+                ResultSet keys = psInsert.getGeneratedKeys();
+                if (keys.next()) return keys.getInt(1);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return -1;
     }
+
 
 
     /**

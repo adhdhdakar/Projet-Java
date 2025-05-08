@@ -56,10 +56,13 @@ public class CartController {
 
         try {
             cmdEnCours = cmdDAO.findByClientAndStatus(idClient, "EC");
+            cmdEnCours = cmdDAO.findByClientAndStatus(idClient, "EC");
             if (cmdEnCours == null) {
-                int newId = cmdDAO.create(LocalDate.now(), idClient);
-                cmdEnCours = new Commande(newId, LocalDate.now(), idClient, "EC");
+                items.clear();
+                updateTotal();
+                return;
             }
+
 
             List<LigneCommande> lignes = ligneDAO.findByCommande(cmdEnCours.getIdCommande());
             for (LigneCommande l : lignes) {
@@ -228,7 +231,7 @@ public class CartController {
     private void handleReturn(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/MainPage.fxml"));
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 600, 400));
+        stage.setScene(new Scene(root, 800, 600));
         stage.setTitle("Page Principale");
     }
 
