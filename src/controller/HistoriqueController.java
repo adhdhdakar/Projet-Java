@@ -43,7 +43,8 @@ public class HistoriqueController {
     private void handleRetour(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/CompteView.fxml"));
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 800, 600));
+        stage.setScene(new Scene(root));
+        stage.setMaximized(true);
         stage.setTitle("Mon Compte");
     }
 }

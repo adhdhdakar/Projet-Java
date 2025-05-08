@@ -10,46 +10,85 @@
            fx:controller="controller.SignUpController"
            style="-fx-background-color: #fdf6f0;">
    <children>
-      <VBox alignment="CENTER" spacing="20.0" prefWidth="400.0"
-            style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 4);">
+      <VBox alignment="CENTER"
+            spacing="20.0"
+            prefWidth="400.0"
+            style="-fx-background-color: white;
+                   -fx-background-radius: 15;
+                   -fx-padding: 40;
+                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 4);">
          <children>
 
-            <Label text="Inscription" style="-fx-font-size: 26px; -fx-font-weight: bold;" />
+            <!-- Titre -->
+            <Label text="Inscription"
+                   style="-fx-font-size: 26px; -fx-font-weight: bold;" />
 
+            <!-- Prénom -->
             <VBox spacing="10.0" alignment="CENTER_LEFT">
                <children>
                   <Label text="Prénom" />
-                  <TextField fx:id="prenomField" promptText="Entrez votre prénom" prefWidth="300.0"
-                             style="-fx-background-radius: 8; -fx-padding: 8;" />
+                  <TextField fx:id="prenomField"
+                             promptText="Entrez votre prénom"
+                             prefWidth="300.0"
+                             style="-fx-background-radius: 8;
+                                    -fx-padding: 8;" />
                </children>
             </VBox>
 
+            <!-- **Nom** (AJOUTÉ) -->
+            <VBox spacing="10.0" alignment="CENTER_LEFT">
+               <children>
+                  <Label text="Nom" />
+                  <TextField fx:id="nomField"
+                             promptText="Entrez votre nom"
+                             prefWidth="300.0"
+                             style="-fx-background-radius: 8;
+                                    -fx-padding: 8;" />
+               </children>
+            </VBox>
+
+            <!-- Email -->
             <VBox spacing="10.0" alignment="CENTER_LEFT">
                <children>
                   <Label text="Email" />
-                  <TextField fx:id="emailField" promptText="Entrez votre email" prefWidth="300.0"
-                             style="-fx-background-radius: 8; -fx-padding: 8;" />
+                  <TextField fx:id="emailField"
+                             promptText="Entrez votre email"
+                             prefWidth="300.0"
+                             style="-fx-background-radius: 8;
+                                    -fx-padding: 8;" />
                </children>
             </VBox>
 
+            <!-- Mot de passe -->
             <VBox spacing="10.0" alignment="CENTER_LEFT">
                <children>
                   <Label text="Mot de passe" />
-                  <PasswordField fx:id="mdpField" promptText="Entrez votre mot de passe" prefWidth="300.0"
-                                 style="-fx-background-radius: 8; -fx-padding: 8;" />
+                  <PasswordField fx:id="mdpField"
+                                 promptText="Entrez votre mot de passe"
+                                 prefWidth="300.0"
+                                 style="-fx-background-radius: 8;
+                                        -fx-padding: 8;" />
                </children>
             </VBox>
 
-            <Button fx:id="signUpButton" text="Créer un compte" prefWidth="200.0"
-                    style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold;"
+            <!-- Bouton créer un compte -->
+            <Button fx:id="signUpButton"
+                    text="Créer un compte"
+                    prefWidth="200.0"
+                    style="-fx-background-color: #e67e22;
+                           -fx-text-fill: white;
+                           -fx-background-radius: 8;
+                           -fx-font-weight: bold;"
                     onAction="#handleSignUp" />
 
+            <!-- Bouton retour -->
+            <Button text="Retour"
+                    onAction="#handleRetour"
+                    style="-fx-background-color: transparent;
+                           -fx-text-fill: #666;
+                           -fx-underline: true;" />
+
          </children>
-         <Button text="Retour"
-                 onAction="#handleRetour"
-                 style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-underline: true;" />
-
       </VBox>
-
    </children>
 </StackPane>
