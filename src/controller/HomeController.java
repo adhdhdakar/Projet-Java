@@ -130,6 +130,7 @@ public class HomeController {
         card.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-background-radius: 10; -fx-border-radius: 10;");
         card.setPrefWidth(160);
         card.setPrefHeight(260);
+        card.setAlignment(Pos.CENTER);
 
         return card;
     }
