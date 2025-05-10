@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 import javafx.event.ActionEvent;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import model.Client;
@@ -21,6 +22,7 @@ public class CompteController {
     @FXML private TextField prenomField;
     @FXML private TextField emailField;
     @FXML private PasswordField mdpField;
+    @FXML private StackPane contentPane;
 
     private final ClientDAO clientDAO = new ClientDAO();
 
@@ -76,5 +78,16 @@ public class CompteController {
         stage.setScene(new Scene(root, 800, 600));
         stage.setTitle("Historique des commandes");
     }
+
+    @FXML
+    private void handleLogout(ActionEvent event) throws IOException {
+        Session.getInstance().setClient(null); // Réinitialise la session
+
+        Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root, 800, 600));
+        stage.setTitle("Connexion");
+    }
+
 
 }
