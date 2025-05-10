@@ -24,7 +24,8 @@ public class ClientDAO {
                         rs.getString("prenom"),
                         rs.getString("email"),
                         rs.getString("motDePasse"),
-                        rs.getString("typeClient")
+                        rs.getString("typeClient"),
+                        rs.getString("code_cb")
                 );
                 clients.add(c);
             }
@@ -54,7 +55,8 @@ public class ClientDAO {
                         rs.getString("prenom"),
                         rs.getString("email"),
                         rs.getString("motDePasse"),
-                        rs.getString("typeClient")
+                        rs.getString("typeClient"),
+                        rs.getString("code_cb")
                 );
             }
 
@@ -65,7 +67,8 @@ public class ClientDAO {
         return null;
     }
     public boolean create(Client client) {
-        String sql = "INSERT INTO Client (nom, prenom, email, motDePasse, typeClient) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Client (nom, prenom, email, motDePasse, typeClient, code_cb)"
+                + " VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Connexion.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -75,6 +78,7 @@ public class ClientDAO {
             stmt.setString(3, client.getEmail());
             stmt.setString(4, client.getMotDePasse());
             stmt.setString(5, client.getTypeClient());
+            stmt.setString(6, client.getCodeCb());;
 
             stmt.executeUpdate();
             return true;
@@ -86,8 +90,8 @@ public class ClientDAO {
     }
 
     public void update(Client client) throws SQLException {
-        String sql = "UPDATE Client SET nom = ?, prenom = ?, email = ?, motDePasse = ? WHERE idClient = ?";
-
+        String sql = "UPDATE Client SET nom = ?, prenom = ?, email = ?, motDePasse = ?, code_cb = ?"
+                + " WHERE idClient = ?";
         try (Connection conn = Connexion.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -95,7 +99,8 @@ public class ClientDAO {
             stmt.setString(2, client.getPrenom());
             stmt.setString(3, client.getEmail());
             stmt.setString(4, client.getMotDePasse());
-            stmt.setInt(5, client.getIdClient());
+            stmt.setString(5, client.getCodeCb());
+            stmt.setInt(6, client.getIdClient());
 
             stmt.executeUpdate();
         }
