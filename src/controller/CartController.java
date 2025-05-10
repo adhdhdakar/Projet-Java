@@ -220,6 +220,30 @@ public class CartController {
             new Alert(Alert.AlertType.WARNING, "Aucune commande en cours à valider.").showAndWait();
             return;
         }
+
+        // 1) Demande du code CB
+        TextInputDialog cbDialog = new TextInputDialog();
+        cbDialog.setTitle("Validation carte bancaire");
+        cbDialog.setHeaderText("Veuillez saisir votre code CB");
+        cbDialog.setContentText("Code CB :");
+        Optional<String> saisieOpt = cbDialog.showAndWait();
+        if (saisieOpt.isEmpty()) {
+            // L'utilisateur a annulé la saisie
+            return;
+        }
+        String saisieCode = saisieOpt.get().trim();
+
+        // 2) Récupération du code enregistré pour le client
+        String codeEnregistre = Session.getInstance().getClient().getCodeCb();
+        // (vérifiez que getCodeCb() existe dans votre modèle Client)
+
+        // 3) Vérification
+        if (!saisieCode.equals(codeEnregistre)) {
+            new Alert(Alert.AlertType.ERROR, "Code CB invalide !").showAndWait();
+            return;
+        }
+
+        // 4) Si tout est OK, on peut procéder à la validation
         try {
             cmdDAO.updateStatut(cmdEnCours.getIdCommande(), "VA");
             new Alert(Alert.AlertType.INFORMATION,
@@ -231,7 +255,7 @@ public class CartController {
             cmdEnCours = null;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, " Erreur lors de la validation de la commande.").showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Erreur lors de la validation de la commande.").showAndWait();
         }
     }
 
