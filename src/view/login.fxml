@@ -1,84 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane xmlns="http://javafx.com/javafx/23.0.1"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="controller.LoginController"
-           style="-fx-background-color: #fdf6f0;">
+<StackPane prefHeight="698.0" prefWidth="576.0" style="-fx-background-color: #fdf6f0;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
     <children>
-        <VBox alignment="CENTER" spacing="15.0" prefWidth="350.0"
-              style="-fx-background-color: white;
-                     -fx-background-radius: 15;
-                     -fx-padding: 30;
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 4);">
+        <VBox alignment="CENTER" prefWidth="350.0" spacing="30.0" style="-fx-background-color: white;                      -fx-background-radius: 15;                      -fx-padding: 30;                      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 4);">
             <children>
 
-                <!-- Logo + nom de l'app -->
-                <HBox alignment="CENTER" spacing="10">
-                    <children>
-                        <ImageView fitHeight="40" preserveRatio="true">
-                            <image>
-                                <Image url="@/images/logoDarkShop.png" />
-                            </image>
-                        </ImageView>
-                        <Label text="DarkShop"
-                               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #333;" />
-                    </children>
-                </HBox>
+                <!-- Logo central agrandi -->
+                <ImageView fitHeight="312.0" fitWidth="322.0" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/logoDarkShop.png" />
+                    </image>
+                </ImageView>
 
                 <!-- Titre de connexion -->
-                <Label text="Connexion"
-                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" />
+                <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Connexion" />
 
-                <!-- Champ Email (plus étroit) -->
-                <VBox spacing="8.0" alignment="CENTER_LEFT">
+                <!-- Champ Email -->
+                <VBox spacing="8.0">
                     <children>
                         <Label text="Email" />
-                        <TextField fx:id="emailField"
-                                   promptText="Entrez votre email"
-                                   prefWidth="250.0"
-                                   style="-fx-background-radius: 8; -fx-padding: 6;" />
+                        <TextField fx:id="emailField" alignment="TOP_LEFT" prefHeight="29.0" prefWidth="346.0" promptText="Entrez votre email" style="-fx-background-radius: 8; -fx-padding: 6;" />
                     </children>
                 </VBox>
 
-                <!-- Champ Mot de passe (plus étroit) -->
-                <VBox spacing="8.0" alignment="CENTER_LEFT">
+                <!-- Champ Mot de passe -->
+                <VBox alignment="CENTER_LEFT" prefHeight="46.0" prefWidth="46.0" spacing="8.0">
                     <children>
                         <Label text="Mot de passe" />
-                        <PasswordField fx:id="passwordField"
-                                       promptText="Entrez votre mot de passe"
-                                       prefWidth="250.0"
-                                       style="-fx-background-radius: 8; -fx-padding: 6;" />
+                        <PasswordField fx:id="passwordField" prefWidth="250.0" promptText="Entrez votre mot de passe" style="-fx-background-radius: 8; -fx-padding: 6;" />
                     </children>
                 </VBox>
 
                 <!-- Message d'erreur -->
-                <Label fx:id="messageLabel"
-                       text=""
-                       style="-fx-text-fill: red;" />
+                <Label fx:id="messageLabel" style="-fx-text-fill: red;" text="" />
 
                 <!-- Boutons -->
-                <Button fx:id="loginButton"
-                        text="Se connecter"
-                        prefWidth="180.0"
-                        style="-fx-background-color: #e67e22;
-                               -fx-text-fill: white;
-                               -fx-background-radius: 8;
-                               -fx-font-weight: bold;" />
+                <Button fx:id="loginButton" prefWidth="180.0" style="-fx-background-color: #e67e22;                                -fx-text-fill: white;                                -fx-background-radius: 8;                                -fx-font-weight: bold;" text="Se connecter" />
 
-                <Button fx:id="signupButton"
-                        text="S'inscrire"
-                        prefWidth="180.0"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: #e67e22;
-                               -fx-border-color: #e67e22;
-                               -fx-border-radius: 8;
-                               -fx-font-weight: bold;" />
+                <Button fx:id="signupButton" prefWidth="180.0" style="-fx-background-color: transparent;                                -fx-text-fill: #e67e22;                                -fx-border-color: #e67e22;                                -fx-border-radius: 8;                                -fx-font-weight: bold;" text="S'inscrire" />
 
             </children>
         </VBox>
