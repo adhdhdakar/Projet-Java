@@ -1,6 +1,7 @@
 package model;
 
 public class Article {
+    private String type;
     private int idArticle;
     private String nom;
     private String description;
@@ -17,6 +18,17 @@ public class Article {
         this.prixVrac = prixVrac;
         this.quantiteVrac = quantiteVrac;
         this.stock = stock;
+    }
+
+    public Article(int idArticle, String nom, String description, double prixUnitaire, double prixVrac, int quantiteVrac, int stock, String type) {
+        this.idArticle = idArticle;
+        this.nom = nom;
+        this.description = description;
+        this.prixUnitaire = prixUnitaire;
+        this.prixVrac = prixVrac;
+        this.quantiteVrac = quantiteVrac;
+        this.stock = stock;
+        this.type = type;
     }
 
     // Getters

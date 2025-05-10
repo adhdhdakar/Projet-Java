@@ -5,10 +5,7 @@ import dao.LigneCommandeDAO;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -34,6 +31,8 @@ public class HomeController {
 
     @FXML
     private FlowPane productContainer;
+    @FXML
+    private ComboBox<String> typeComboBox;
 
     private final ArticleDAO articleDAO = new ArticleDAO();
     private final LigneCommandeDAO ligneDAO = new LigneCommandeDAO();
@@ -41,9 +40,13 @@ public class HomeController {
     @FXML
     public void initialize() {
         List<Article> articles = articleDAO.findAll();
-        for (Article a : articles) {
-            productContainer.getChildren().add(createCard(a));
-        }
+        populateCards(articles);
+
+        // Remplir la ComboBox des types d'article
+        List<String> types = articleDAO.findAllTypes();
+        typeComboBox.getItems().add("Tous les types");
+        typeComboBox.getItems().addAll(types);
+        typeComboBox.setValue("Tous les types");
     }
 
     private VBox createCard(Article article) {
@@ -140,4 +143,25 @@ public class HomeController {
         a.setHeaderText(null);
         a.showAndWait();
     }
+
+    @FXML
+    private void filterByType() {
+        String selected = typeComboBox.getValue();
+        List<Article> articles;
+        if (selected.equals("Tous les types")) {
+            articles = articleDAO.findAll();
+        } else {
+            articles = articleDAO.findByType(selected);
+        }
+        populateCards(articles);
+    }
+
+    private void populateCards(List<Article> articles) {
+        productContainer.getChildren().clear();
+        for (Article a : articles) {
+            productContainer.getChildren().add(createCard(a));
+        }
+    }
+
+
 }
