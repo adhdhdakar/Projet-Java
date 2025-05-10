@@ -74,7 +74,8 @@ public class ArticlesAdminController {
 
     private void importImageForArticle(int idArticle, File imageFile) {
         try {
-            Path dest = Path.of("src/images", idArticle + ".png");
+            String ext = getFileExtension(imageFile);
+            Path dest = Path.of("src/images", idArticle + ext);
             Files.copy(imageFile.toPath(), dest, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             showAlert("Erreur", "Impossible de copier l'image.");
@@ -116,7 +117,7 @@ public class ArticlesAdminController {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
-        alert.setHeaderText("Supprimer l'article '" + selected.getNom() + "' ?");
+        alert.setHeaderText("Supprimer l'article '" + selected.getNom() + "'? ");
         alert.setContentText("Cette action est irréversible.");
 
         alert.showAndWait().ifPresent(response -> {
@@ -147,8 +148,10 @@ public class ArticlesAdminController {
         Label imageLabel = new Label("Aucune image sélectionnée");
         imageButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Choisir une image PNG");
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images PNG", "*.png"));
+            fileChooser.setTitle("Choisir une image (PNG, JPG, JPEG)");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
+            );
             File file = fileChooser.showOpenDialog(null);
             if (file != null) {
                 selectedImage = file;
@@ -196,11 +199,20 @@ public class ArticlesAdminController {
         return dialog.showAndWait().orElse(null);
     }
 
+    private String getFileExtension(File file) {
+        String name = file.getName().toLowerCase();
+        int lastDot = name.lastIndexOf('.');
+        if (lastDot > 0 && lastDot < name.length() - 1) {
+            return name.substring(lastDot);
+        }
+        return ".png"; // fallback si aucune extension trouvée
+    }
+
     private void showAlert(String titre, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(titre);
-        alert.setContentText(message);
         alert.setHeaderText(null);
+        alert.setContentText(message);
         alert.showAndWait();
     }
 }
