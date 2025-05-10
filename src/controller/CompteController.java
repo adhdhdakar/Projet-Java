@@ -85,7 +85,8 @@ public class CompteController {
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 800, 600));
+        stage.setScene(new Scene(root));
+        stage.setMaximized(true);
         stage.setTitle("Connexion");
     }
 

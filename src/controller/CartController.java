@@ -79,6 +79,19 @@ public class CartController {
         }
     }
 
+    private Image loadImageForArticle(int articleId) {
+        // Liste des extensions à tester, dans l'ordre de préférence
+        String[] exts = { ".png", ".jpg", ".jpeg" };
+        for (String ext : exts) {
+            String path = "/images/" + articleId + ext;
+            InputStream is = getClass().getResourceAsStream(path);
+            if (is != null) {
+                return new Image(is);
+            }
+        }
+        return new Image(getClass().getResourceAsStream("/images/default.png"));
+    }
+
     private Node createCard(ArticleInCart it) {
         // Crée la carte
         VBox card = new VBox();
@@ -94,11 +107,7 @@ public class CartController {
         card.setAlignment(Pos.CENTER);
 
         // Image du produit
-        String path = "/images/" + it.getArticle().getIdArticle() + ".png";
-        InputStream is = getClass().getResourceAsStream(path);
-        Image img = (is != null)
-                ? new Image(is)
-                : new Image(getClass().getResourceAsStream("/images/default.png"));
+        Image img = loadImageForArticle(it.getArticle().getIdArticle());
         ImageView iv = new ImageView(img);
         iv.setFitWidth(120);
         iv.setPreserveRatio(true);
