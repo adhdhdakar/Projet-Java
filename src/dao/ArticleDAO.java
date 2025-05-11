@@ -11,12 +11,23 @@ public class ArticleDAO {
 
     public List<Article> findAll() {
         List<Article> articles = new ArrayList<>();
-        String sql = "SELECT idArticle, nom, description, prixUnitaire, prixVrac, quantiteVrac, stock "
-                + "FROM Article";
+        String sql =
+                "SELECT a.idArticle,\n" +
+                        "       a.nom,\n" +
+                        "       a.description,\n" +
+                        "       a.prixUnitaire,\n" +
+                        "       a.prixVrac,\n" +
+                        "       a.quantiteVrac,\n" +
+                        "       a.stock,\n" +
+                        "       t.nomType AS typeName\n" +
+                        "  FROM Article a\n" +
+                        "  LEFT JOIN ArticleType at ON a.idArticle = at.idArticle\n" +
+                        "  LEFT JOIN Type        t  ON at.idType    = t.idType\n" +
+                        " ORDER BY a.nom";
 
         try (Connection conn = Connexion.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Article a = new Article(
@@ -26,15 +37,14 @@ public class ArticleDAO {
                         rs.getDouble("prixUnitaire"),
                         rs.getDouble("prixVrac"),
                         rs.getInt("quantiteVrac"),
-                        rs.getInt("stock")
+                        rs.getInt("stock"),
+                        rs.getString("typeName")
                 );
                 articles.add(a);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return articles;
     }
 
@@ -77,8 +87,20 @@ public class ArticleDAO {
      * Récupère un article par son ID (avec tous les champs nécessaires).
      */
     public Article findById(int idArticle) throws SQLException {
-        String sql = "SELECT idArticle, nom, description, prixUnitaire, prixVrac, quantiteVrac, stock "
-                + "FROM Article WHERE idArticle = ?";
+        String sql = """
+        SELECT a.idArticle,
+               a.nom,
+               a.description,
+               a.prixUnitaire,
+               a.prixVrac,
+               a.quantiteVrac,
+               a.stock,
+               t.nomType AS typeName
+          FROM Article a
+          LEFT JOIN ArticleType at ON a.idArticle = at.idArticle
+          LEFT JOIN Type        t  ON at.idType    = t.idType
+         WHERE a.idArticle = ?
+        """;
         try (Connection conn = Connexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idArticle);
@@ -91,7 +113,8 @@ public class ArticleDAO {
                             rs.getDouble("prixUnitaire"),
                             rs.getDouble("prixVrac"),
                             rs.getInt("quantiteVrac"),
-                            rs.getInt("stock")
+                            rs.getInt("stock"),
+                            rs.getString("typeName")    // constructeur étendu
                     );
                 }
             }
@@ -180,6 +203,18 @@ public class ArticleDAO {
         }
     }
 
+    public boolean deleteArticleType(int idArticle) {
+        String sql = "DELETE FROM ArticleType WHERE idArticle = ?";
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idArticle);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public void decrementStock(int idArticle, int quantite) throws SQLException {
         String sql = "UPDATE Article "
                 + "SET stock = stock - ? "
@@ -220,4 +255,88 @@ public class ArticleDAO {
             }
         }
     }
+
+    public List<String> findAllTypes() {
+        List<String> types = new ArrayList<>();
+        String sql = "SELECT nomType FROM Type ORDER BY nomType";
+        try (Connection c = Connexion.getConnection();
+             Statement st = c.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                types.add(rs.getString("nomType"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return types;
+    }
+
+    public int findTypeIdByName(String nomType) {
+        String sql = "SELECT idType FROM Type WHERE nomType = ?";
+        try (Connection c = Connexion.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, nomType);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idType");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public boolean createArticleType(int idArticle, int idType) {
+        String sql = "INSERT INTO ArticleType (idArticle, idType) VALUES (?, ?)";
+        try (Connection c = Connexion.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, idArticle);
+            ps.setInt(2, idType);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Article> findByType(String nomType) {
+        List<Article> articles = new ArrayList<>();
+        String sql = """
+        SELECT a.idArticle,
+               a.nom,
+               a.description,
+               a.prixUnitaire,
+               a.prixVrac,
+               a.quantiteVrac,
+               a.stock,
+               t.nomType AS typeName
+          FROM Article a
+          JOIN ArticleType at ON a.idArticle = at.idArticle
+          JOIN Type        t  ON at.idType    = t.idType
+         WHERE t.nomType = ?
+         ORDER BY a.nom
+        """;
+        try (Connection conn = Connexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nomType);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    articles.add(new Article(
+                            rs.getInt("idArticle"),
+                            rs.getString("nom"),
+                            rs.getString("description"),
+                            rs.getDouble("prixUnitaire"),
+                            rs.getDouble("prixVrac"),
+                            rs.getInt("quantiteVrac"),
+                            rs.getInt("stock"),
+                            rs.getString("typeName")  // on récupère ici le nom du type
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return articles;
+    }
+
 }

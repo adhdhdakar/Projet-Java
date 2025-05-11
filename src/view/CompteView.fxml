@@ -34,19 +34,24 @@
 
         <Label text="Mot de passe :" GridPane.rowIndex="3" GridPane.columnIndex="0" />
         <PasswordField fx:id="mdpField" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+        <Label text="Code CB :" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <PasswordField fx:id="codeCbField" promptText="••••••••" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
     </GridPane>
 
     <Button text="Enregistrer les modifications"
             onAction="#handleSave"
             style="-fx-background-color: #ff6600; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20;" />
 
-    <Button text="Retour"
-            onAction="#handleRetour"
-            style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-underline: true;" />
+
 
     <Button text="Historique des commandes"
             onAction="#handleHistorique"
             style="-fx-background-color: #cccccc; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 8 20;" />
+
+    <Button text="Retour"
+            onAction="#handleRetour"
+            style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-underline: true;" />
 
     <Button text="Déconnexion"
             onAction="#handleLogout"

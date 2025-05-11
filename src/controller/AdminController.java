@@ -60,6 +60,11 @@ public class AdminController {
         }
     }
 
+    @FXML
+    private void handleTypes() {
+        loadView("/view/TypesAdmin.fxml");
+    }
+
     // Méthode générique pour charger une vue dans le StackPane
     private void loadView(String fxmlPath) {
         try {

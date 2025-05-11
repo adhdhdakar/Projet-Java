@@ -22,6 +22,7 @@ public class CompteController {
     @FXML private TextField prenomField;
     @FXML private TextField emailField;
     @FXML private PasswordField mdpField;
+    @FXML private PasswordField codeCbField;
     @FXML private StackPane contentPane;
 
     private final ClientDAO clientDAO = new ClientDAO();
@@ -34,6 +35,7 @@ public class CompteController {
             prenomField.setText(client.getPrenom());
             emailField.setText(client.getEmail());
             mdpField.setText(client.getMotDePasse());
+            codeCbField.setText(client.getCodeCb());
         }
     }
 
@@ -46,6 +48,7 @@ public class CompteController {
         client.setPrenom(prenomField.getText());
         client.setEmail(emailField.getText());
         client.setMotDePasse(mdpField.getText());
+        client.setCodeCb(codeCbField.getText());
 
         try {
             clientDAO.update(client);

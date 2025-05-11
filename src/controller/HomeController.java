@@ -5,10 +5,7 @@ import dao.LigneCommandeDAO;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -34,26 +31,43 @@ public class HomeController {
 
     @FXML
     private FlowPane productContainer;
+    @FXML
+    private ComboBox<String> typeComboBox;
 
     private final ArticleDAO articleDAO = new ArticleDAO();
     private final LigneCommandeDAO ligneDAO = new LigneCommandeDAO();
 
     @FXML
     public void initialize() {
+        // chargement initial des articles
         List<Article> articles = articleDAO.findAll();
-        for (Article a : articles) {
-            productContainer.getChildren().add(createCard(a));
-        }
+        populateCards(articles);
+
+        // Remplir la ComboBox des types d'article
+        List<String> types = articleDAO.findAllTypes();
+        typeComboBox.getItems().add("Tous les types");
+        typeComboBox.getItems().addAll(types);
+        typeComboBox.setValue("Tous les types");
+
+        typeComboBox.setOnAction(e -> filterByType());
     }
+
+    private Image loadImageForArticle(int articleId) {
+        String[] exts = { ".png", ".jpg", ".jpeg" };
+        for (String ext : exts) {
+            String path = "/images/" + articleId + ext;
+            InputStream is = getClass().getResourceAsStream(path);
+            if (is != null) {
+                return new Image(is);
+            }
+        }
+        return new Image(getClass().getResourceAsStream("/images/default.png"));
+    }
+
 
     private VBox createCard(Article article) {
         // Chargement de l’image
-        String path = "/images/" + article.getIdArticle() + ".png";
-        InputStream is = getClass().getResourceAsStream(path);
-        Image img = (is != null)
-                ? new Image(is)
-                : new Image(getClass().getResourceAsStream("/images/default.png"));
-
+        Image img = loadImageForArticle(article.getIdArticle());
         ImageView iv = new ImageView(img);
         iv.setFitWidth(120);
         iv.setPreserveRatio(true);
@@ -140,4 +154,25 @@ public class HomeController {
         a.setHeaderText(null);
         a.showAndWait();
     }
+
+    @FXML
+    private void filterByType() {
+        String selected = typeComboBox.getValue();
+        List<Article> articles;
+        if ("Tous les types".equals(selected)) {
+            articles = articleDAO.findAll();
+        } else {
+            articles = articleDAO.findByType(selected);
+        }
+        populateCards(articles);
+    }
+
+    private void populateCards(List<Article> articles) {
+        productContainer.getChildren().clear();
+        for (Article a : articles) {
+            productContainer.getChildren().add(createCard(a));
+        }
+    }
+
+
 }
