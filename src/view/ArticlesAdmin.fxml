@@ -23,6 +23,7 @@
                 <TableColumn fx:id="colPrixVrac" prefWidth="89.0" text="Prix Vrac" />
                 <TableColumn fx:id="colQuantiteVrac" prefWidth="138.0" text="Quantité vrac" />
                 <TableColumn fx:id="colStock" prefWidth="107.0" text="Stock" />
+                <TableColumn fx:id="colType" prefWidth="100.0" text="Type" />
             </columns>
         </TableView>
 
