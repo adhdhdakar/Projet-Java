@@ -39,6 +39,7 @@ public class HomeController {
 
     @FXML
     public void initialize() {
+        // chargement initial des articles
         List<Article> articles = articleDAO.findAll();
         populateCards(articles);
 
@@ -47,16 +48,26 @@ public class HomeController {
         typeComboBox.getItems().add("Tous les types");
         typeComboBox.getItems().addAll(types);
         typeComboBox.setValue("Tous les types");
+
+        typeComboBox.setOnAction(e -> filterByType());
     }
+
+    private Image loadImageForArticle(int articleId) {
+        String[] exts = { ".png", ".jpg", ".jpeg" };
+        for (String ext : exts) {
+            String path = "/images/" + articleId + ext;
+            InputStream is = getClass().getResourceAsStream(path);
+            if (is != null) {
+                return new Image(is);
+            }
+        }
+        return new Image(getClass().getResourceAsStream("/images/default.png"));
+    }
+
 
     private VBox createCard(Article article) {
         // Chargement de l’image
-        String path = "/images/" + article.getIdArticle() + ".png";
-        InputStream is = getClass().getResourceAsStream(path);
-        Image img = (is != null)
-                ? new Image(is)
-                : new Image(getClass().getResourceAsStream("/images/default.png"));
-
+        Image img = loadImageForArticle(article.getIdArticle());
         ImageView iv = new ImageView(img);
         iv.setFitWidth(120);
         iv.setPreserveRatio(true);
@@ -148,7 +159,7 @@ public class HomeController {
     private void filterByType() {
         String selected = typeComboBox.getValue();
         List<Article> articles;
-        if (selected.equals("Tous les types")) {
+        if ("Tous les types".equals(selected)) {
             articles = articleDAO.findAll();
         } else {
             articles = articleDAO.findByType(selected);

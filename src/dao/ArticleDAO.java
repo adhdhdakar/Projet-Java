@@ -223,12 +223,12 @@ public class ArticleDAO {
 
     public List<String> findAllTypes() {
         List<String> types = new ArrayList<>();
-        String sql = "SELECT DISTINCT type FROM article ORDER BY type";
+        String sql = "SELECT nomType FROM Type ORDER BY nomType";
         try (Connection conn = Connexion.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                types.add(rs.getString("type"));
+                types.add(rs.getString("nomType"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -236,25 +236,33 @@ public class ArticleDAO {
         return types;
     }
 
-    public List<Article> findByType(String type) {
+    public List<Article> findByType(String nomType) {
         List<Article> articles = new ArrayList<>();
-        String sql = "SELECT * FROM article WHERE type = ?";
+        String sql = """
+            SELECT a.*
+              FROM Article a
+              JOIN ArticleType at ON a.idArticle = at.idArticle
+              JOIN Type t         ON at.idType    = t.idType
+             WHERE t.nomType = ?
+             ORDER BY a.nom
+            """;
         try (Connection conn = Connexion.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, type);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Article a = new Article(
-                        rs.getInt("idArticle"),
-                        rs.getString("nom"),
-                        rs.getString("description"),
-                        rs.getDouble("prixUnitaire"),
-                        rs.getDouble("prixVrac"),
-                        rs.getInt("quantiteVrac"),
-                        rs.getInt("stock"),
-                        rs.getString("type")
-                );
-                articles.add(a);
+            stmt.setString(1, nomType);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Article a = new Article(
+                            rs.getInt("idArticle"),
+                            rs.getString("nom"),
+                            rs.getString("description"),
+                            rs.getDouble("prixUnitaire"),
+                            rs.getDouble("prixVrac"),
+                            rs.getInt("quantiteVrac"),
+                            rs.getInt("stock")
+                            // … si votre constructeur Article a d'autres champs, adaptez ici
+                    );
+                    articles.add(a);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
