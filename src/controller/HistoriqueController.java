@@ -1,6 +1,8 @@
 package controller;
 
 import dao.CommandeDAO;
+import dao.ArticleDAO;
+import dao.LigneCommandeDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,8 +11,7 @@ import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.event.ActionEvent;
-import model.Commande;
-import model.Session;
+import model.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -20,6 +21,8 @@ public class HistoriqueController {
 
     @FXML private ListView<String> commandeList;
     private final CommandeDAO commandeDAO = new CommandeDAO();
+    private final LigneCommandeDAO ligneDAO = new LigneCommandeDAO();
+    private final ArticleDAO artDAO         = new ArticleDAO();
 
     @FXML
     public void initialize() {
@@ -27,10 +30,20 @@ public class HistoriqueController {
         try {
             List<Commande> commandes = commandeDAO.findValideByClient(idClient);
             for (Commande c : commandes) {
-                String text = String.format("Commande #%d  |  Date : %s  |  Total : %.2f €",
+                // 1) récupérer les lignes
+                List<LigneCommande> lignes = ligneDAO.findByCommande(c.getIdCommande());
+                double totalRecalc = 0;
+                for (LigneCommande l : lignes) {
+                    Article art = artDAO.findById(l.getIdArticle());
+                    ArticleInCart aic = new ArticleInCart(art, l.getQuantite());
+                    totalRecalc += aic.getTotal();
+                }
+                String text = String.format(
+                        "Commande #%d  |  Date : %s  |  Total : %.2f €",
                         c.getIdCommande(),
-                        c.getDateCommande().toString(),
-                        c.getTotal());
+                        c.getDateCommande(),
+                        totalRecalc
+                );
                 commandeList.getItems().add(text);
             }
         } catch (SQLException e) {
